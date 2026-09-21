@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Mario ML - Nivel 2</title>
+    <link rel="stylesheet" href="style3.css">
+</head>
+
+<body id="juego-nivel2">
+
+    <div id="juego">
+        <div id="escenario">
+            <div id="mundo">
+
+
+                <div id="titulo-inicial">
+                    <h2>machine learning: fifa</h2>
+                    <p style="font-family: 'Michroma', sans-serif; font-size: small
+;">Usa frames captados de partidos reales</p>
+                </div>
+
+                <div id="tubo-salida-fifa" class="cañeria-entrada">
+                </div>
+                <!-- Bloque amarillo interactivo -->
+                <div class="bloque obstaculo" style="left: 1000px; bottom: 190px; width: 50px; height: 50px;"></div>
+
+                <div class="bloque-amarillo obstaculo" style="left: 1050px; bottom: 190px; width: 50px; height: 50px;" id="bloque-mensaje-ml"></div>
+                <div class="bloque obstaculo" style="left: 1100px; bottom: 190px; width: 50px; height: 50px;"></div>
+
+
+                <div id="cartel-ml" class="oculto">
+
+                    <div id="ml1-contenido1" class="contenido-cartel">
+                        <div class="texto-cartel">
+                            <h2>El modelo de EA procesa<br>más de 8.7 millones de<br>fotogramas</h2>
+                        </div>
+
+                        <img src="img/image 1.png" alt="FIFA">
+                    </div>
+
+                    <div id="ml1-contenido2" class="contenido-cartel oculto">
+                        <div class="texto-cartel">
+                            <h2>La red neuronal calcula y <br> genera en tiempo real cómo se <br>comporta cada articulación</h2>
+                        </div>
+
+                        <video class="video" autoplay loop muted playsinline>
+    <source src="img/fifa.mp4" type="video/mp4">
+</video>
+                    </div>
+
+                </div>
+
+                <div class="bloque obstaculo" style="left: 1600px; bottom: 190px; width: 50px; height: 50px;"></div>
+
+                <div class="bloque-amarillo obstaculo" style="left: 1650px; bottom: 190px; width: 50px; height: 50px;" id="bloque-mensaje-ml2"></div>
+                <div class="bloque obstaculo" style="left: 1700px; bottom: 190px; width: 50px; height: 50px;"></div>
+
+
+                <div id="cartel-ml2" class="oculto">
+
+                    <div id="ml2-contenido1" class="contenido-cartel">
+                        <div class="texto-cartel">
+                            <h2>A partir de lo aprendido, el personaje <br> puede adaptar sus movimientos según <br>el entorno, las acciones del jugador <br> y lo que ocurre en la partida</h2>
+                        </div>
+
+
+
+                    </div>
+
+                    <div id="ml2-contenido2" class="contenido-cartel oculto">
+                        <div class="texto-cartel">
+                            <h2>Cada movimiento se genera <br> entonces de forma dinámica <br>y natural, sin depender únicamente <br> de animaciones predefinidas.</h2>
+                        </div>
+
+                        <img src="https://www.codigocba.com/uploads/images/image_750x415_63eae19f4d79d.jpg" alt="Análisis">
+                    </div>
+
+                </div>
+                <!-- Tubería 1 + Planta 1 -->
+                <div class="tuberia obstaculo" style="left: 150px; bottom: 50px; width: 90px; height: 180px;"></div>
+
+                <div id="bandera"></div>
+                <div id="castillo"></div>
+
+                <!-- Mario -->
+                <div id="mario" class="mario-idle" style="left: 171px; bottom: 230px;"></div>
+
+
+                <div id="bandera"></div>
+                <div id="castillo"></div>
+
+            </div>
+
+            <!-- Piso -->
+            <div id="piso"></div>
+        </div>
+    </div>
+
+    <script src="script3.js"></script>
+</body>
+
+</html>
