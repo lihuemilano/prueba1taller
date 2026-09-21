@@ -26,7 +26,7 @@ window.addEventListener('keydown', (e) => {
 
     // Pasar de nivel/pantalla con Enter
     if (e.key === 'Enter') {
-        window.location.href = "inicio4.html"; // Cambia al nombre de tu siguiente archivo HTML
+        window.location.href = "index.html"; // Cambia al nombre de tu siguiente archivo HTML
     }
 });
 
