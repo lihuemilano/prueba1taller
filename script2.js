@@ -915,7 +915,7 @@ function comprobarEntradaTubo() {
         setTimeout(() => {
 
             window.location.href =
-                "nivel3.html";
+                "nivel3A.html";
 
         }, 800);
     }
