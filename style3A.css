@@ -1,0 +1,324 @@
+@import url('https://fonts.googleapis.com/css2?family=Bungee&family=Michroma&display=swap');
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #000;
+    font-family: 'Michroma', sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+#juego {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+    background-image: url('img/Frame\ 139.png');
+    background-size: cover;
+    background-position: center;
+}
+
+#mundo {
+    height: 100%;
+    width: 3000px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+}
+
+#piso {
+    width: 3000px;
+    height: 50px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 10;
+    background-image: url('https://i.pinimg.com/736x/2f/87/23/2f87236e7dfb88c1a8561200cdddfe6e.jpg');
+    background-size: contain;
+    background-repeat: repeat-x;
+}
+
+#mario {
+    width: 48px;
+    height: 60px;
+    position: absolute;
+    bottom: 50px;
+    left: 40px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: bottom center;
+    transform-origin: bottom center;
+    transition: transform 0.1s;
+    z-index: 999;
+}
+
+#mario.mario-idle {
+    background-image: url('https://i2.wp.com/webstockreview.net/images/mario-clipart-pixel-mario-13.png');
+}
+
+#mario.mario-corriendo {
+    /* Aquí se conectará la sprite sheet de correr que pases */
+    background-image: url('https://i2.wp.com/webstockreview.net/images/mario-clipart-pixel-mario-13.png');
+}
+
+#mario.mario-saltando {
+    background-image: url('https://clipartcraft.com/images/mario-transparent-retro-3.png');
+    background-size: 135%;
+    background-position: bottom center;
+}
+
+#mario.mario-agachado {
+    /* Estado para cuando baja por la tubería */
+    background-image: url('https://i2.wp.com/webstockreview.net/images/mario-clipart-pixel-mario-13.png');
+    transform: scaleY(0.8) !important;
+}
+
+
+/* Animación de entrada por la tubería */
+
+#mario.bajando-tubo {
+    transition: bottom 0.8s ease-in, opacity 0.8s ease-in !important;
+    bottom: -20px !important;
+    opacity: 0;
+    z-index: 4;
+    /* Pasa por detrás del borde frontal del tubo */
+}
+
+.bloque {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    background-image: url('https://i.pinimg.com/1200x/41/b0/98/41b09881e9d7d54f36b519e9cde2a261.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: bottom 0.05s ease-out;
+}
+
+.bloque-amarillo {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    background-image: url('https://i.pinimg.com/236x/77/e9/43/77e9438bb5fa840004b0de9d6635601c.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.bloque-amarillo.usado {
+    background-image: url('https://i.pinimg.com/736x/83/1c/76/831c76160f5f7f8332c5d16bfaee8db6.jpg');
+}
+
+#juego-nivel2 {
+    background-color: #000;
+    background-image: none;
+    overflow: hidden;
+    position: relative;
+    font-family: 'Michroma', sans-serif;
+    margin: 0;
+}
+
+#escenario {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 3000px;
+    min-width: 3000px;
+    will-change: transform;
+}
+
+
+/* Modales */
+
+.oculto {
+    display: none !important;
+}
+
+#cartel-ml {
+    position: absolute;
+    left: 430px;
+    /* Mismo X que el bloque amarillo */
+    bottom: 290px;
+    transform: translateX(-25%);
+    /* Alineación/centrado respecto al bloque */
+    z-index: 100;
+}
+
+#cartel-ml2 {
+    position: absolute;
+    left: 1550px;
+    /* Posición X alineada con el bloque 2 */
+    bottom: 350px;
+    transform: translateX(-35%);
+    z-index: 100;
+}
+
+#cartel-ml3 {
+    position: absolute;
+    left: 1600px;
+    bottom: 350px;
+    transform: translateX(-35%);
+    z-index: 100;
+}
+
+#cartel-ml4 {
+    position: absolute;
+    left: 2050px;
+    bottom: 350px;
+    transform: translateX(-35%);
+    z-index: 100;
+}
+
+#cartel-ml5 {
+    position: absolute;
+    left: 2200px;
+    bottom: 350px;
+    transform: translateX(-35%);
+    z-index: 100;
+}
+
+#cartel-ml6 {
+    position: absolute;
+    left: 2200px;
+    bottom: 350px;
+    transform: translateX(-35%);
+    z-index: 100;
+}
+
+#titulo-inicial {
+    position: absolute;
+    left: 170px;
+    bottom: 350px;
+    z-index: 100;
+    font-family: 'Bungee', cursive;
+    color: #ffffff;
+    font-size: 18px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
+    background-color: #4e4e4e;
+    border: 4px solid #ffffff;
+    padding: 15px 25px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.oculto {
+    display: none !important;
+}
+
+#cartel-ml,
+#cartel-ml2,
+#cartel-ml3,
+#cartel-ml4,
+#cartel-ml5,
+#cartel-ml6 {
+    font-family: 'Bungee', cursive;
+    color: #ffffff;
+    margin: 0 0 8px 0;
+    font-size: 18px;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
+    background-color: #4e4e4e;
+    border: 4px solid #ffffff;
+    padding: 20px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.cartelesjuego1 {
+    position: absolute;
+    font-family: 'Bungee', cursive;
+    color: #ffffff;
+    left: 1930px;
+    bottom: 60px;
+    transform: translateX(-35%);
+    z-index: 100;
+    font-size: 12px;
+    text-transform: uppercase;
+    background-color: #4e4e4e;
+    border: 4px solid #ffffff;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    text-align: center;
+    white-space: nowrap;
+    letter-spacing: 3px;
+}
+
+.cartelesjuego2 {
+    position: absolute;
+    font-family: 'Bungee', cursive;
+    color: #ffffff;
+    left: 2730px;
+    bottom: 60px;
+    transform: translateX(-35%);
+    z-index: 100;
+    font-size: 10px;
+    text-transform: uppercase;
+    background-color: #4e4e4e;
+    border: 4px solid #ffffff;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    text-align: center;
+    white-space: nowrap;
+    letter-spacing: 3px;
+}
+
+.cartelesjuego1,
+.cartelesjuego2 {
+    position: absolute;
+    z-index: 100;
+}
+
+.bloque-amarillo {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    background-image: url('https://i.pinimg.com/236x/77/e9/43/77e9438bb5fa840004b0de9d6635601c.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.bloque-amarillo.usado {
+    filter: grayscale(1);
+}
+
+.tuberia {
+    position: absolute;
+    background-image: url('https://cdn.pixabay.com/photo/2013/07/12/13/52/super-mario-brothers-147465_1280.png');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    z-index: 10;
+}
+
+#cartel7 {
+    position: absolute;
+    left: 2250px;
+    bottom: 350px;
+    transform: translateX(-35%);
+    z-index: 100;
+    font-family: 'Bungee', cursive;
+    color: #ffffff;
+    font-size: 18px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
+    background-color: #4e4e4e;
+    border: 4px solid #ffffff;
+    padding: 20px;
+    text-align: center;
+    white-space: nowrap;
+}

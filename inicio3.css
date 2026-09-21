@@ -1,0 +1,112 @@
+@import url('https://fonts.googleapis.com/css2?family=Bungee&family=Michroma&display=swap');
+html,
+body {
+    width: 100%;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+#juego {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+#mario {
+    position: absolute;
+    width: 48px;
+    height: 60px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+
+/* Skins y estados de Mario */
+
+.mario-idle {
+    background-image: url('https://i2.wp.com/webstockreview.net/images/mario-clipart-pixel-mario-13.png');
+}
+
+.mario-corriendo {
+    background-image: url('https://i2.wp.com/webstockreview.net/images/mario-clipart-pixel-mario-13.png');
+}
+
+.imagen-teclas {
+    position: fixed;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 300px;
+    /* Ajusta el tamaño según tu imagen */
+    height: auto;
+    z-index: 10;
+}
+
+.mario-saltando {
+    background-image: url('https://clipartcraft.com/images/mario-transparent-retro-3.png');
+    background-size: 135%;
+    background-position: bottom center;
+}
+
+.mario-agachado {
+    /* Estado para cuando baja por la tubería */
+    background-image: url('https://i2.wp.com/webstockreview.net/images/mario-clipart-pixel-mario-13.png');
+    transform: scaleY(0.8) !important;
+}
+
+body {
+    background-color: #000000;
+    background-image: url("img/Frame 171.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.info {
+    position: fixed;
+    align-items: center;
+}
+
+.contenedor {
+    width: max-content;
+}
+
+.textoabajo {
+    position: fixed;
+    font-family: 'Michroma', sans-serif;
+    font-size: 20px;
+    text-align: center;
+    top: 10%;
+    left: 50%;
+    /* Centrado correcto */
+    transform: translateX(-50%);
+    max-width: 550px;
+    color: #fdfdfd;
+}
+
+.textoabajo2 {
+    position: fixed;
+    font-family: 'Michroma', sans-serif;
+    font-size: 18px;
+    text-align: center;
+    top: 70%;
+    left: 50%;
+    /* Centrado correcto */
+    transform: translateX(-50%);
+    color: #fdfdfd;
+}
+
+.instrucciones {
+    position: fixed;
+    font-family: 'Michroma', sans-serif;
+    font-size: 13px;
+    text-align: left;
+    top: 88%;
+    right: 3%;
+    color: #fdfdfd;
+}

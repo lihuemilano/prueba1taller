@@ -1,0 +1,80 @@
+@import url('https://fonts.googleapis.com/css2?family=Bungee&family=Michroma&display=swap');
+html,
+body {
+    width: 100%;
+    height: 100vh;
+    /* OBLIGATORIO: Le da altura real a toda la pantalla */
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    /* Evita barras de scroll durante la caída */
+}
+
+body {
+    background-color: #000000;
+    background-image: url("img/Frame 171.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.info {
+    position: fixed;
+    align-items: center;
+}
+
+.contenedor {
+    width: max-content;
+}
+
+.textoabajo {
+    position: fixed;
+    font-family: 'Michroma', sans-serif;
+    font-size: 18px;
+    text-align: center;
+    top: 70%;
+    left: 50%;
+    /* Centrado correcto */
+    transform: translateX(-50%);
+    max-width: 550px;
+    color: #fdfdfd;
+}
+
+.instrucciones {
+    position: fixed;
+    font-family: 'Michroma', sans-serif;
+    font-size: 13px;
+    text-align: left;
+    top: 88%;
+    right: 3%;
+    color: #fdfdfd;
+}
+
+
+/* MARIO CAÍDA */
+
+#mario-caida {
+    position: fixed;
+    /* FIXED: Se posiciona respecto a la ventana completa */
+    top: -150px;
+    /* Empieza arriba fuera de la pantalla */
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: top 1.2s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+    z-index: 100;
+}
+
+
+/* Estado al caer (usamos la clase sin tilde) */
+
+#mario-caida.cayo {
+    top: 50%;
+    /* Posición final: Mitad de pantalla */
+}
+
+#img-objeto {
+    width: 90px;
+    height: auto;
+    display: block;
+}

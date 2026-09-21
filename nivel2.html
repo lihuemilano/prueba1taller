@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Mario ML - Nivel 2</title>
+    <link rel="stylesheet" href="style2.css">
+</head>
+
+<body id="juego-nivel2">
+
+    <div id="juego">
+        <div id="escenario">
+            <div id="mundo">
+                <!-- Bloque amarillo interactivo -->
+                <div class="bloque-amarillo obstaculo" style="left: 430px; bottom: 190px; width: 50px; height: 50px;" id="bloque-mensaje-ml"></div>
+
+                <!-- Cartel de mensaje flotante directo sobre el bloque -->
+                <div id="cartel-ml" class="oculto">
+                    <h2>La IA de Mario Bros <span style="font-size: larger;">NO</span> usa <br><span style="color: gold;">MACHINE LEARNING</span></h2>
+                </div>
+
+                <!-- Tubería 1 + Planta 1 -->
+                <div class="tuberia obstaculo" style="left: 150px; bottom: 50px; width: 90px; height: 180px;"></div>
+                <div class="tuberia obstaculo" style="left: 700px; bottom: 50px; width: 80px; height: 110px;"></div>
+                <div id="planta1"></div>
+
+                <!-- Tubería 2 + Planta 2 -->
+                <div class="tuberia obstaculo" style="left: 2650px; bottom: 50px; width: 80px; height: 110px;"></div>
+                <div id="planta2" style="left: 2650px; bottom: 160px; width: 80px; height: 120px;"></div>
+
+                <div class="bloque-amarillo obstaculo" style="left: 1400px; bottom: 190px; width: 50px; height: 50px;" id="bloque-mensaje-ml2"></div>
+                <div id="cartel-ml2" class="oculto">
+                    <h2>Pero si lo tuviera...</h2>
+                </div>
+
+                <div class="bloque obstaculo" style="left: 1750px; bottom: 190px; width: 50px; height: 50px;"></div>
+                <div class="bloque-amarillo obstaculo" style="left: 1800px; bottom: 190px; width: 50px; height: 50px;" id="bloque-mensaje-ml3"></div>
+                <div class="bloque obstaculo" style="left: 1850px; bottom: 190px; width: 50px; height: 50px;"></div>
+                <div id="cartel-ml3" class="oculto">
+                    <h2>podría aprender tu comportamiento</h2>
+                </div>
+
+
+                <div class="bloque obstaculo" style="left: 2000px; bottom: 190px; width: 50px; height: 50px;"></div>
+                <div class="bloque-amarillo obstaculo" style="left: 2050px; bottom: 190px; width: 50px; height: 50px;" id="bloque-mensaje-ml4"></div>
+                <div class="bloque obstaculo" style="left: 2100px; bottom: 190px; width: 50px; height: 50px;"></div>
+                <div id="cartel-ml4" class="oculto">
+                    <h2>y cambiar el suyo.</h2>
+                </div>
+
+                <div id="espina"></div>
+                <div id="hongo"></div>
+
+                <div id="moneda-tuberia" class="oculto" style="left: 720px; bottom: 170px;"></div>
+
+
+                <div id="cartel-ml5" class="oculto">
+                    <h2>pero te damos otra oportunidad</h2>
+                </div>
+
+                <div id="cartel-ml6" class="oculto">
+                    <h2>porque nosotros tambien aprendemos <br> de nuestros errores.</h2>
+                </div>
+
+
+                <!-- Mario -->
+                <div id="mario" class="mario-idle" style="left: 171px; bottom: 230px;"></div>
+            </div>
+
+            <!-- Piso -->
+            <div id="piso"></div>
+        </div>
+    </div>
+
+    <script src="script2.js"></script>
+</body>
+
+</html>
