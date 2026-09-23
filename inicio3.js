@@ -14,7 +14,7 @@ const gravedad = 0.8;
 const fuerzaSalto = 17;
 
 // Únicamente teclas A, S, W, D
-const teclas = { a: false, s: false, w: false, d: false };
+const teclas = { arrowleft: false, arrowdown: false, arrowup: false, arrowright: false };
 
 // Detección de teclas presionadas
 window.addEventListener('keydown', (e) => {
@@ -44,12 +44,12 @@ function actualizar() {
     let nuevoX = marioX;
 
     // Movimiento Horizontal (A para izquierda, D para derecha)
-    if (teclas.a) {
+    if (teclas.arrowleft) {
         nuevoX -= velocidadX;
         direccion = -1;
         moviendose = true;
     }
-    if (teclas.d) {
+    if (teclas.arrowright) {
         nuevoX += velocidadX;
         direccion = 1;
         moviendose = true;
@@ -66,7 +66,7 @@ function actualizar() {
     marioX = nuevoX;
 
     // Salto con la tecla W
-    if (teclas.w && enElSuelo) {
+    if (teclas.arrowup && enElSuelo) {
         velocidadY = fuerzaSalto;
         enElSuelo = false;
     }
@@ -88,7 +88,7 @@ function actualizar() {
     mario.className = '';
     if (!enElSuelo) {
         mario.classList.add('mario-saltando');
-    } else if (teclas.s) {
+    } else if (teclas.arrowdown) {
         mario.classList.add('mario-agachado');
     } else if (moviendose) {
         mario.classList.add('mario-corriendo');
