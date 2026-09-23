@@ -1,11 +1,17 @@
 const mario = document.getElementById('mario');
 const escenario = document.getElementById('escenario');
+const tuberiaJuego1 = document.getElementById('tuberia-juego1');
+const tuberiaJuego2 = document.getElementById('tuberia-juego2');
+let entrandoJuego = false;
+let tuberiasJuegosActivas = false;
+
+
+const cartelJuego1 = document.getElementById('cartel-juego1');
+const cartelJuego2 = document.getElementById('cartel-juego2');
+
 
 const planta1 = document.getElementById('planta1');
 const planta2 = document.getElementById('planta2');
-
-const tuboSalida = document.getElementById('tubo-salida');
-const hongo = document.getElementById('hongo');
 
 const cartel1 = document.getElementById('cartel-ml');
 const cartel2 = document.getElementById('cartel-ml2');
@@ -13,21 +19,19 @@ const cartel3 = document.getElementById('cartel-ml3');
 const cartel4 = document.getElementById('cartel-ml4');
 const cartel5 = document.getElementById('cartel-ml5');
 const cartel6 = document.getElementById('cartel-ml6');
+const cartel7 = document.getElementById('cartel-ml7');
 
-const ANCHO_MUNDO = 3000;
-
+const hongo = document.getElementById('hongo');
 const monedaTuberia = document.getElementById('moneda-tuberia');
 
-// ======================================================
-// ESTADOS GENERALES
-// ======================================================
-
-let monedaDisponible = false;
+const ANCHO_MUNDO = 4000;
 const nivelSuelo = 50;
 
-// ======================================================
-// POSICIÓN DE MARIO Y FÍSICA
-// ======================================================
+const tuboPlantaX = 2500;
+const tuboPlantaWidth = 80;
+const tuboPlantaBottom = 50;
+const tuboPlantaHeight = 170;
+const tuboPlantaTopY = tuboPlantaBottom + tuboPlantaHeight;
 
 let marioX = 171;
 let marioY = 230;
@@ -35,26 +39,20 @@ let marioY = 230;
 let velocidadY = 0;
 let enElSuelo = false;
 let direccion = 1;
-
 let camaraX = 0;
 
 const velocidadX = 7;
 const gravedad = 0.8;
 const fuerzaSalto = 17;
 
-// ======================================================
-// CONTROLES
-// ======================================================
-
 const teclas = {
-    w: false,
-    a: false,
-    s: false,
-    d: false
+    arrowup: false,
+    arrowleft: false,
+    arrowdown: false,
+    arrowright: false
 };
 
-window.addEventListener('keydown', (e) => {
-
+window.addEventListener('keydown', e => {
     const tecla = e.key.toLowerCase();
 
     if (teclas.hasOwnProperty(tecla)) {
@@ -62,8 +60,7 @@ window.addEventListener('keydown', (e) => {
     }
 });
 
-window.addEventListener('keyup', (e) => {
-
+window.addEventListener('keyup', e => {
     const tecla = e.key.toLowerCase();
 
     if (teclas.hasOwnProperty(tecla)) {
@@ -71,61 +68,24 @@ window.addEventListener('keyup', (e) => {
     }
 });
 
-// ======================================================
-// ESTADOS DE MARIO
-// ======================================================
-
 let marioMuerto = false;
 let marioEsFantasma = false;
 let controlesBloqueados = false;
 
-// ======================================================
-// HONGO
-// ======================================================
-
-let hongoActivo = false;
-let hongoX = 0;
-let hongoY = 0;
-
-// ======================================================
-// TUBERÍA
-// ======================================================
-
-let bajandoTubo = false;
-
-// Esta variable se activa solamente después de que
-// Mario muere por la planta y revive.
-let tuboPlantaHabilitado = false;
-
-// ======================================================
-// PLANTA 1
-// ======================================================
-
 let planta1Arriba = false;
-
-// ======================================================
-// PLANTA 2
-// ======================================================
-
-// La planta 2 comienza escondida.
 let planta2Arriba = false;
-
-// false = todavía no apareció
-// true = ya apareció una vez y no vuelve a aparecer.
 let planta2Aparecida = false;
 
-// ======================================================
-// COORDENADAS DE LA TUBERÍA DE LA PLANTA 2
-// ======================================================
+let hongoActivo = false;
+let monedaDisponible = false;
 
-const tuboPlantaX = 2650;
-const tuboPlantaWidth = 80;
-const tuboPlantaTopY = nivelSuelo + 110;
+let bajandoTubo = false;
+let tuboPlantaHabilitado = false;
 
 function actualizarCamara() {
     const anchoPantalla = window.innerWidth;
 
-    camaraX = marioX - (anchoPantalla / 3);
+    camaraX = marioX - anchoPantalla / 3;
 
     if (camaraX < 0) {
         camaraX = 0;
@@ -139,66 +99,33 @@ function actualizarCamara() {
 
     escenario.style.transform = `translateX(${-camaraX}px)`;
 }
-// ======================================================
-// PLANTA 1
-// ======================================================
 
 function cicloPlanta1() {
-
     if (!planta1) return;
 
     if (marioMuerto) {
-
         planta1Arriba = false;
+        planta1.style.bottom = '30px';
 
-        planta1.style.bottom =
-            '30px';
-
-        setTimeout(
-            cicloPlanta1,
-            300
-        );
-
+        setTimeout(cicloPlanta1, 300);
         return;
     }
 
     planta1Arriba = !planta1Arriba;
 
     planta1.style.bottom =
-        planta1Arriba ?
-        '160px' :
-        '10px';
+        planta1Arriba ? '160px' : '10px';
 
-    setTimeout(
-        cicloPlanta1,
-        2000
-    );
+    setTimeout(cicloPlanta1, 2000);
 }
 
 if (planta1) {
-
-    planta1.style.bottom =
-        '30px';
-
-    setTimeout(
-        cicloPlanta1,
-        1200
-    );
+    planta1.style.bottom = '30px';
+    setTimeout(cicloPlanta1, 1200);
 }
 
-// ======================================================
-// COLISIONES CON OBSTÁCULOS
-// ======================================================
-
-function resolverColisiones(
-    siguienteX,
-    siguienteY
-) {
-
-    const obstaculos =
-        document.querySelectorAll(
-            '.obstaculo'
-        );
+function resolverColisiones(siguienteX, siguienteY) {
+    const obstaculos = document.querySelectorAll('.obstaculo');
 
     const marioWidth = 48;
     const marioHeight = 60;
@@ -211,344 +138,213 @@ function resolverColisiones(
 
     obstaculos.forEach(elem => {
 
-        const bLeft =
-            parseInt(elem.style.left) ||
-            elem.offsetLeft;
-
-        const bBottom =
-            parseInt(elem.style.bottom) ||
-            50;
-
-        const bWidth =
-            elem.offsetWidth;
-
-        const bHeight =
-            elem.offsetHeight;
+        if (!tuberiasJuegosActivas &&
+            (
+                elem.id === 'tuberia-juego1' ||
+                elem.id === 'tuberia-juego2' ||
+                elem.id === 'bloque-juego1' ||
+                elem.id === 'bloque-juego2'
+            )
+        ) {
+            return;
+        }
+        const bLeft = parseInt(elem.style.left) || elem.offsetLeft;
+        const bBottom = parseInt(elem.style.bottom) || 50;
+        const bWidth = elem.offsetWidth;
+        const bHeight = elem.offsetHeight;
 
         const solapeX =
-            (resultado.x + marioWidth > bLeft) &&
-            (resultado.x < bLeft + bWidth);
+            resultado.x + marioWidth > bLeft &&
+            resultado.x < bLeft + bWidth;
 
         const solapeY =
-            (resultado.y + marioHeight > bBottom) &&
-            (resultado.y < bBottom + bHeight);
+            resultado.y + marioHeight > bBottom &&
+            resultado.y < bBottom + bHeight;
+
+        if (!solapeX || !solapeY) {
+            return;
+        }
+
+        const previoSolapeX =
+            marioX + marioWidth > bLeft &&
+            marioX < bLeft + bWidth;
+
+        if (!previoSolapeX) {
+            if (marioX + marioWidth <= bLeft) {
+                resultado.x = bLeft - marioWidth;
+            } else if (marioX >= bLeft + bWidth) {
+                resultado.x = bLeft + bWidth;
+            }
+
+            return;
+        }
 
         if (
-            solapeX &&
-            solapeY
+            velocidadY <= 0 &&
+            marioY >= bBottom + bHeight - 20
         ) {
+            resultado.y = bBottom + bHeight;
+            velocidadY = 0;
+            resultado.enPlataforma = true;
+        } else if (
+            velocidadY > 0 &&
+            marioY + marioHeight <= bBottom + 20
+        ) {
+            resultado.y = bBottom - marioHeight;
+            velocidadY = 0;
 
-            const previoSolapeX =
-                (marioX + marioWidth > bLeft) &&
-                (marioX < bLeft + bWidth);
-
-            if (previoSolapeX) {
-
-                // ==========================================
-                // CAER SOBRE BLOQUE / TUBERÍA
-                // ==========================================
-
-                if (
-                    velocidadY <= 0 &&
-                    marioY >=
-                    bBottom +
-                    bHeight -
-                    20
-                ) {
-
-                    resultado.y =
-                        bBottom +
-                        bHeight;
-
-                    velocidadY = 0;
-
-                    resultado.enPlataforma =
-                        true;
-                }
-
-                // ==========================================
-                // GOLPEAR BLOQUE DESDE ABAJO
-                // ==========================================
-                else if (
-                    velocidadY > 0 &&
-                    marioY +
-                    marioHeight <=
-                    bBottom + 20
-                ) {
-
-                    resultado.y =
-                        bBottom -
-                        marioHeight;
-
-                    velocidadY = 0;
-
-                    // ======================================
-                    // BLOQUE 1
-                    // ======================================
-
-                    if (
-                        elem.id ===
-                        'bloque-mensaje-ml' &&
-                        !elem.classList.contains(
-                            'usado'
-                        )
-                    ) {
-
-                        elem.classList.add(
-                            'usado'
-                        );
-
-                        activarBloque1();
-                    }
-
-                    // ======================================
-                    // BLOQUE 2
-                    // ======================================
-
-                    if (
-                        elem.id ===
-                        'bloque-mensaje-ml2' &&
-                        !elem.classList.contains(
-                            'usado'
-                        )
-                    ) {
-
-                        elem.classList.add(
-                            'usado'
-                        );
-
-                        activarBloque2();
-                    }
-
-                    // ======================================
-                    // BLOQUE 3
-                    // ======================================
-
-                    if (
-                        elem.id ===
-                        'bloque-mensaje-ml3' &&
-                        !elem.classList.contains(
-                            'usado'
-                        )
-                    ) {
-
-                        elem.classList.add(
-                            'usado'
-                        );
-
-                        activarBloque3();
-                    }
-
-                    // ======================================
-                    // BLOQUE 4
-                    // ======================================
-
-                    if (
-                        elem.id ===
-                        'bloque-mensaje-ml4' &&
-                        !elem.classList.contains(
-                            'usado'
-                        )
-                    ) {
-
-                        elem.classList.add(
-                            'usado'
-                        );
-
-                        activarBloque4();
-                    }
-                }
-
-            } else {
-
-                // ==========================================
-                // COLISIÓN LATERAL
-                // ==========================================
-
-                if (
-                    marioX +
-                    marioWidth <=
-                    bLeft
-                ) {
-
-                    resultado.x =
-                        bLeft -
-                        marioWidth;
-
-                } else if (
-                    marioX >=
-                    bLeft + bWidth
-                ) {
-
-                    resultado.x =
-                        bLeft +
-                        bWidth;
-                }
+            if (
+                elem.id === 'bloque-mensaje-ml' &&
+                !elem.classList.contains('usado')
+            ) {
+                elem.classList.add('usado');
+                activarBloque1();
             }
+
+            if (
+                elem.id === 'bloque-mensaje-ml2' &&
+                !elem.classList.contains('usado')
+            ) {
+                elem.classList.add('usado');
+                activarBloque2();
+            }
+
+            if (
+                elem.id === 'bloque-mensaje-ml3' &&
+                !elem.classList.contains('usado')
+            ) {
+                elem.classList.add('usado');
+                activarBloque3();
+            }
+
+            if (
+                elem.id === 'bloque-mensaje-ml4' &&
+                !elem.classList.contains('usado')
+            ) {
+                elem.classList.add('usado');
+                activarBloque4();
+            }
+            if (
+                elem.id === 'bloque-mensaje-ml7' &&
+                !elem.classList.contains('usado')
+            ) {
+                elem.classList.add('usado');
+                activarBloque7();
+                setTimeout(() => {
+                    if (tuberiaJuego1) {
+                        tuberiaJuego1.classList.add('subida');
+                    }
+
+                    if (tuberiaJuego2) {
+                        tuberiaJuego2.classList.add('subida');
+                    }
+                    tuberiasJuegosActivas = true;
+                    setTimeout(() => {
+                        if (cartelJuego1) {
+                            cartelJuego1.classList.remove('oculto');
+                        }
+
+                        if (cartelJuego2) {
+                            cartelJuego2.classList.remove('oculto');
+                        }
+                    }, 1000);
+
+                }, 500);
+            }
+
         }
     });
 
     return resultado;
 }
 
-// ======================================================
-// CARTELES
-// ======================================================
-
 function ocultarTodosLosCarteles() {
+    if (cartel1) cartel1.classList.add('oculto');
+    if (cartel2) cartel2.classList.add('oculto');
+    if (cartel3) cartel3.classList.add('oculto');
+    if (cartel4) cartel4.classList.add('oculto');
+    if (cartel5) cartel5.classList.add('oculto');
+    if (cartel6) cartel6.classList.add('oculto');
+    if (cartel7) cartel7.classList.add('oculto');
 
-    if (cartel1) {
-        cartel1.classList.add('oculto');
-    }
-
-    if (cartel2) {
-        cartel2.classList.add('oculto');
-    }
-
-    if (cartel3) {
-        cartel3.classList.add('oculto');
-    }
-
-    if (cartel4) {
-        cartel4.classList.add('oculto');
-    }
-
-    if (cartel5) {
-        cartel5.classList.add('oculto');
-    }
-
-    if (cartel6) {
-        cartel6.classList.add('oculto');
-    }
 }
-
-// ======================================================
-// ACTIVAR CARTEL 1
-// ======================================================
 
 function activarBloque1() {
-
     ocultarTodosLosCarteles();
 
     if (cartel1) {
-        cartel1.classList.remove(
-            'oculto'
-        );
+        cartel1.classList.remove('oculto');
     }
 }
 
-// ======================================================
-// ACTIVAR CARTEL 2
-// ======================================================
-
 function activarBloque2() {
-
     ocultarTodosLosCarteles();
 
     if (cartel2) {
-        cartel2.classList.remove(
-            'oculto'
-        );
+        cartel2.classList.remove('oculto');
     }
 }
 
-// ======================================================
-// ACTIVAR CARTEL 3
-// ======================================================
-
 function activarBloque3() {
-
     ocultarTodosLosCarteles();
 
     if (cartel3) {
-        cartel3.classList.remove(
-            'oculto'
-        );
+        cartel3.classList.remove('oculto');
     }
 }
 
-// ======================================================
-// ACTIVAR CARTEL 4
-// ======================================================
-
 function activarBloque4() {
-
     ocultarTodosLosCarteles();
 
     if (cartel4) {
-        cartel4.classList.remove(
-            'oculto'
-        );
+        cartel4.classList.remove('oculto');
     }
 }
 
-// ======================================================
-// PLANTA 2
-// PRIMERA VEZ SOBRE LA TUBERÍA
-// ======================================================
+function activarBloque7() {
+    ocultarTodosLosCarteles();
+
+    if (cartel7) {
+        cartel7.classList.remove('oculto');
+    }
+}
+
+
 
 function comprobarPlanta2SobreTubo() {
-
-    // Si ya apareció una vez, no vuelve a aparecer.
-    if (
-        planta2Aparecida ||
-        marioMuerto
-    ) {
+    if (planta2Aparecida || marioMuerto) {
         return;
     }
 
-    const centroMarioX =
-        marioX + 24;
+    const centroMarioX = marioX + 24;
 
     const sobreTuboX =
-        centroMarioX >=
-        tuboPlantaX &&
-        centroMarioX <=
-        tuboPlantaX +
-        tuboPlantaWidth;
+        centroMarioX >= tuboPlantaX &&
+        centroMarioX <= tuboPlantaX + tuboPlantaWidth;
 
     const sobreTuboY =
-        Math.abs(
-            marioY -
-            tuboPlantaTopY
-        ) < 15;
+        Math.abs(marioY - tuboPlantaTopY) < 15;
 
-    // Mario está encima de la tubería.
-    if (
-        sobreTuboX &&
-        sobreTuboY
-    ) {
-
-        // IMPORTANTE:
-        // Se marca ANTES de activar la planta.
-        // Así nunca podrá volver a salir.
+    if (sobreTuboX && sobreTuboY) {
         planta2Aparecida = true;
-
         activarPlanta2();
     }
 }
 
-// ======================================================
-// HACER APARECER PLANTA 2
-// ======================================================
-
 function activarPlanta2() {
-
     planta2Arriba = true;
 
     if (planta2) {
-
+        planta2.style.transition = 'none';
+        planta2.style.bottom = '80px';
         planta2.style.display = 'block';
-
-        planta2.style.transition =
-            'bottom 0.3s ease-out';
-
-        planta2.style.bottom = '160px';
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                planta2.style.transition = 'bottom 0.4s ease-out';
+                planta2.style.bottom = '220px';  
+            });
+        });
     }
-
-    // ==========================================
-    // CARTEL 5
-    // ==========================================
 
     ocultarTodosLosCarteles();
 
@@ -556,39 +352,26 @@ function activarPlanta2() {
         cartel5.classList.remove('oculto');
     }
 
-    // ==========================================
-    // MUERTE INMEDIATA
-    // ==========================================
-
     ejecutarMuerteFantasma();
+    setTimeout(() => {
+        esconderPlanta2();
+    }, 2000);
 }
 
-// ======================================================
-// ESCONDER PLANTA 2
-// ======================================================
-
 function esconderPlanta2() {
-
     planta2Arriba = false;
 
     if (!planta2) return;
 
-    planta2.style.transition =
-        'bottom 0.2s ease-in';
-
-    planta2.style.bottom =
-        '30px';
+    planta2.style.transition = 'bottom 0.2s ease-in';
+    planta2.style.bottom = '90px';
 
     setTimeout(() => {
-
-        planta2.style.display =
-            'none';
-
-    }, 250);
+        planta2.style.display = 'none';
+    }, 320);
 }
 
 function ejecutarMuerteFantasma() {
-
     if (marioMuerto) return;
 
     marioMuerto = true;
@@ -600,281 +383,290 @@ function ejecutarMuerteFantasma() {
     mario.className = '';
     mario.classList.add('mario-fantasma');
 
-    // CARTEL 5
+    mario.style.opacity = '1';
+
     ocultarTodosLosCarteles();
 
     if (cartel5) {
         cartel5.classList.remove('oculto');
     }
 
-    // La planta desaparece
     esconderPlanta2();
 
-    // Impulso inicial de muerte
     velocidadY = 12;
-
-    // Después de 4 segundos aparece el hongo
+    setTimeout(esconderPlanta2, 3000);
     setTimeout(() => {
-
         velocidadY = 0;
-
-        aparecerHongoEspecial();
-
-    }, 4000);
+        aparecerHongo();
+    }, 3000);
 }
 
-
-// ======================================================
-// APARECER HONGO
-// ======================================================
-
-function aparecerHongoEspecial() {
-
-    // El hongo queda donde murió Mario
-    hongoX = marioX;
-    hongoY = marioY;
-
-    if (hongo) {
-
-        hongo.style.left =
-            hongoX + 'px';
-
-        hongo.style.bottom =
-            hongoY + 'px';
-
-        hongo.style.display =
-            'block';
-    }
+function aparecerHongo() {
+    if (!hongo) return;
 
     hongoActivo = true;
 
-    // CARTEL 6
-    ocultarTodosLosCarteles();
+    hongo.style.display = 'block';
+    hongo.style.left = marioX + 'px';
 
-    if (cartel6) {
-        cartel6.classList.remove('oculto');
-    }
-}
+    const alturaInicial =
+        marioY + 190;
 
+    hongo.style.bottom =
+        alturaInicial + 'px';
 
-// ======================================================
-// ACTUALIZAR HONGO
-// ======================================================
+    hongo.style.opacity = '1';
 
-function actualizarHongo() {
+    let tiempo = 0;
 
-    if (!hongoActivo || !hongo) {
-        return;
-    }
-
-    const anchoHongo =
-        hongo.offsetWidth || 40;
-
-    const altoHongo =
-        hongo.offsetHeight || 40;
-
-    const anchoMario = 48;
-    const altoMario = 60;
-
-    const solapeX =
-        marioX + anchoMario > hongoX &&
-        marioX < hongoX + anchoHongo;
-
-    const solapeY =
-        marioY + altoMario > hongoY &&
-        marioY < hongoY + altoHongo;
-
-    if (solapeX && solapeY) {
-
-        // ------------------------------------------
-        // HONGO DESAPARECE
-        // ------------------------------------------
-
-        hongoActivo = false;
-
-        hongo.style.display =
-            'none';
-
-
-        // ------------------------------------------
-        // MARIO REVIVE
-        // ------------------------------------------
-
-        marioMuerto = false;
-        marioEsFantasma = false;
-        controlesBloqueados = false;
-        let marioTitilando = false;
-
-        // 50 PX A LA IZQUIERDA DE LA CAÑERÍA
-        marioX =
-            tuboPlantaX - 200;
-
-        marioY =
-            nivelSuelo;
-
-        velocidadY = 0;
-
-        enElSuelo = true;
-
-
-        // ------------------------------------------
-        // ANIMACIÓN NORMAL
-        // ------------------------------------------
-
-        mario.className =
-            'mario-idle';
-
-        mario.style.zIndex =
-            '20';
-
-        mario.style.opacity = '1';
-
-        // Mario titila al reaparecer
-        hacerTitilarMario();
-
-        // ------------------------------------------
-        // AHORA PUEDE VOLVER A ENTRAR
-        // A LA CAÑERÍA
-        // ------------------------------------------
-
-        tuboPlantaHabilitado =
-            true;
-
-
-        // ------------------------------------------
-        // MONEDA
-        // ------------------------------------------
-
-        if (monedaTuberia) {
-
-            monedaTuberia.classList.remove(
-                'oculto'
-            );
-
-            monedaDisponible =
-                true;
+    const flotar = setInterval(() => {
+        if (!hongoActivo) {
+            clearInterval(flotar);
+            return;
         }
 
-        actualizarCamara();
-    }
+        tiempo += 0.08;
+
+        const movimiento =
+            Math.sin(tiempo) * 10;
+
+        hongo.style.bottom =
+            (alturaInicial + movimiento) + 'px';
+    }, 30);
+
+    setTimeout(() => {
+        clearInterval(flotar);
+        desaparecerHongo();
+    }, 3000);
+}
+
+function desaparecerHongo() {
+    if (!hongo) return;
+
+    let posicion =
+        parseFloat(hongo.style.bottom) ||
+        marioY + 190;
+
+    const bajar = setInterval(() => {
+        posicion -= 4;
+
+        hongo.style.bottom =
+            posicion + 'px';
+
+        hongo.style.opacity =
+            Math.max(0, (posicion - marioY) / 100);
+
+        if (posicion <= marioY) {
+            clearInterval(bajar);
+
+            hongo.style.display = 'none';
+            hongo.style.opacity = '1';
+
+            hongoActivo = false;
+
+            reaparecerMario();
+        }
+    }, 30);
+}
+
+function reaparecerMario() {
+    marioMuerto = false;
+    marioEsFantasma = false;
+    controlesBloqueados = false;
+
+    marioX = tuboPlantaX - 200;
+    marioY = nivelSuelo;
+
+    velocidadY = 0;
+    enElSuelo = true;
+
+    mario.className = 'mario-idle';
+
+    mario.style.zIndex = '20';
+    mario.style.opacity = '1';
+
+    tuboPlantaHabilitado = true;
+
+    hacerTitilarMario();
+
+    aparecerMoneda();
+
+    setTimeout(() => {
+        ocultarTodosLosCarteles();
+
+        if (cartel6) {
+            cartel6.classList.remove('oculto');
+        }
+    }, 500);
+
+    actualizarCamara();
+}
+
+function aparecerMoneda() {
+    if (!monedaTuberia) return;
+
+    const monedaX =
+        tuboPlantaX +
+        tuboPlantaWidth / 2 -
+        30;
+
+    const monedaY =
+        tuboPlantaTopY +
+        40;
+
+    monedaTuberia.style.left =
+        monedaX + 'px';
+
+    monedaTuberia.style.bottom =
+        monedaY + 'px';
+
+    monedaTuberia.style.display =
+        'block';
+
+    monedaTuberia.classList.remove('oculto');
+
+    monedaDisponible = true;
 }
 
 function comprobarContactoMoneda() {
+    if (!monedaDisponible || !monedaTuberia) {
+        return;
+    }
 
-    if (!monedaDisponible ||
-        bajandoTubo
+    const monedaX =
+        tuboPlantaX +
+        tuboPlantaWidth / 2 -
+        30;
+
+    const monedaY =
+        tuboPlantaTopY +
+        40;
+
+    const solapeX =
+        marioX + 48 > monedaX &&
+        marioX < monedaX + 60;
+
+    const solapeY =
+        marioY + 60 > monedaY &&
+        marioY < monedaY + 60;
+
+    if (solapeX && solapeY) {
+        monedaDisponible = false;
+
+        monedaTuberia.classList.add('oculto');
+        monedaTuberia.style.display = 'none';
+    }
+}
+
+
+function comprobarEntradaTubosJuegos() {
+    if (
+        entrandoJuego ||
+        marioMuerto ||
+        !teclas.arrowdown ||
+        !tuberiasJuegosActivas
     ) {
         return;
     }
 
-    const mLeft = 720;
-    const mBottom = 170;
+    const marioCentro = marioX + 24;
 
-    const solapeX =
-        marioX + 48 > mLeft &&
-        marioX < mLeft + 40;
+    if (tuberiaJuego1) {
+        const tuboX = tuberiaJuego1.offsetLeft;
+        const tuboAncho = tuberiaJuego1.offsetWidth;
 
-    const solapeY =
-        marioY + 60 > mBottom &&
-        marioY < mBottom + 40;
+        if (
+            marioCentro >= tuboX - 120 &&
+            marioCentro <= tuboX + tuboAncho + 120 &&
+            Math.abs(marioY - 230) < 90
+        ) {
+            entrarEnTuberiaJuego('indexcreatures.html');
+            return;
+        }
+    }
 
-    if (
-        solapeX &&
-        solapeY
-    ) {
+    if (tuberiaJuego2) {
+        const tuboX = tuberiaJuego2.offsetLeft;
+        const tuboAncho = tuberiaJuego2.offsetWidth;
 
-        monedaDisponible = false;
-
-        bajandoTubo = true;
-
-        controlesBloqueados = true;
-
-
-        mario.style.transition =
-            'transform 0.6s ease, opacity 0.6s ease';
-
-        mario.style.transform =
-            'scale(0) rotate(360deg)';
-
-        mario.style.opacity =
-            '0';
-
-        setTimeout(() => {
-
-            window.location.href =
-                "nivel3A.html";
-
-        }, 700);
+        if (
+            marioCentro >= tuboX - 120 &&
+            marioCentro <= tuboX + tuboAncho + 120 &&
+            Math.abs(marioY - 230) < 80
+        ) {
+            entrarEnTuberiaJuego('indexfifa.html');
+            return;
+        }
     }
 }
-// ======================================================
-// SEGUNDA VEZ SOBRE LA TUBERÍA
-// ======================================================
+
+function entrarEnTuberiaJuego(pagina) {
+    entrandoJuego = true;
+    controlesBloqueados = true;
+
+    marioX = marioX;
+    mario.style.left = marioX + 'px';
+
+    mario.className = '';
+    mario.classList.add('mario-agachado', 'bajando-tubo');
+
+    mario.style.transition = 'transform 0.8s ease, opacity 0.8s ease';
+    mario.style.transform = 'scale(0.2)';
+    mario.style.opacity = '0';
+
+    setTimeout(() => {
+        window.location.href = pagina;
+    }, 800);
+}
 
 function hacerTitilarMario() {
-    marioTitilando = true;
-
     let visible = true;
     let cantidad = 0;
 
     const intervalo = setInterval(() => {
-
         visible = !visible;
-        mario.style.opacity = visible ? '1' : '0.2';
+
+        mario.style.opacity =
+            visible ? '1' : '0.2';
 
         cantidad++;
 
         if (cantidad >= 10) {
             clearInterval(intervalo);
-
             mario.style.opacity = '1';
-            marioTitilando = false;
         }
-
     }, 120);
 }
 
 function comprobarEntradaTubo() {
-
-    // Esta función solamente funciona después
-    // de que Mario murió y revivió.
     if (!tuboPlantaHabilitado ||
         bajandoTubo ||
-        marioMuerto
+        marioMuerto ||
+        !teclas.arrowdown
     ) {
         return;
     }
 
-    const centroMarioX =
-        marioX + 24;
+    const centroMarioX = marioX + 24;
 
     const sobreTuboX =
         centroMarioX >= tuboPlantaX &&
         centroMarioX <= tuboPlantaX + tuboPlantaWidth;
 
     const sobreTuboY =
-        Math.abs(
-            marioY -
-            tuboPlantaTopY
-        ) < 12;
-
-    // ==========================================
-    // MARIO ENTRA AUTOMÁTICAMENTE
-    // ==========================================
+        Math.abs(marioY - tuboPlantaTopY) < 15;
 
     if (
         sobreTuboX &&
         sobreTuboY &&
         enElSuelo
     ) {
-
         bajandoTubo = true;
-
         controlesBloqueados = true;
 
         marioX =
             tuboPlantaX +
-            (tuboPlantaWidth / 2) -
+            tuboPlantaWidth / 2 -
             24;
 
         mario.style.left =
@@ -887,106 +679,49 @@ function comprobarEntradaTubo() {
             'bajando-tubo'
         );
 
-        // ==========================================
-        // CARTEL 6
-        // ==========================================
-
-        ocultarTodosLosCarteles();
-
-        if (cartel6) {
-            cartel6.classList.remove(
-                'oculto'
-            );
-        }
-
-        // ==========================================
-        // ABSORBER A MARIO
-        // ==========================================
-
         mario.style.transition =
             'transform 0.7s ease, opacity 0.7s ease';
 
         mario.style.transform =
             'scale(0.2)';
 
-        mario.style.opacity =
-            '0';
+        mario.style.opacity = '0';
 
         setTimeout(() => {
-
             window.location.href =
-                "nivel3A.html";
-
+                'nivel3A.html';
         }, 800);
     }
 }
 
 function actualizar() {
-
     actualizarCamara();
 
-    // ==========================================
-    // HONGO
-    // ==========================================
-
-    if (hongoActivo) {
-        actualizarHongo();
-    }
-
-    // ==========================================
-    // MARIO ENTRANDO A TUBERÍA
-    // ==========================================
-
     if (bajandoTubo) {
-
         mario.style.left =
             marioX + 'px';
 
         mario.style.bottom =
             marioY + 'px';
 
-        requestAnimationFrame(
-            actualizar
-        );
-
+        requestAnimationFrame(actualizar);
         return;
     }
 
-    // ==========================================
-    // MARIO VIVO
-    // ==========================================
-
     if (!marioMuerto) {
-
-        let nuevoX =
-            marioX;
-
-        let moviendose =
-            false;
-
-        // ==========================================
-        // MOVIMIENTO
-        // ==========================================
+        let nuevoX = marioX;
+        let moviendose = false;
 
         if (!controlesBloqueados) {
-
-            if (teclas.a) {
-
-                nuevoX -=
-                    velocidadX;
-
+            if (teclas.arrowleft) {
+                nuevoX -= velocidadX;
                 direccion = -1;
-
                 moviendose = true;
             }
 
-            if (teclas.d) {
-
-                nuevoX +=
-                    velocidadX;
-
+            if (teclas.arrowright) {
+                nuevoX += velocidadX;
                 direccion = 1;
-
                 moviendose = true;
             }
         }
@@ -995,39 +730,27 @@ function actualizar() {
             nuevoX = 0;
         }
 
-        // Límite derecho del mundo
-        const anchoMario = 48;
-
-        if (nuevoX > ANCHO_MUNDO - anchoMario) {
-            nuevoX = ANCHO_MUNDO - anchoMario;
+        if (
+            nuevoX >
+            ANCHO_MUNDO - 48
+        ) {
+            nuevoX =
+                ANCHO_MUNDO - 48;
         }
-        // ==========================================
-        // SALTO
-        // ==========================================
 
         if (
-            teclas.w &&
+            teclas.arrowup &&
             enElSuelo &&
             !controlesBloqueados
         ) {
-
-            velocidadY =
-                fuerzaSalto;
-
-            enElSuelo =
-                false;
+            velocidadY = fuerzaSalto;
+            enElSuelo = false;
         }
 
-        // ==========================================
-        // FÍSICA
-        // ==========================================
-
         let nuevoY =
-            marioY +
-            velocidadY;
+            marioY + velocidadY;
 
-        velocidadY -=
-            gravedad;
+        velocidadY -= gravedad;
 
         const colision =
             resolverColisiones(
@@ -1035,117 +758,53 @@ function actualizar() {
                 nuevoY
             );
 
-        marioX =
-            colision.x;
+        marioX = colision.x;
+        marioY = colision.y;
 
-        marioY =
-            colision.y;
-
-        // ==========================================
-        // PLATAFORMAS / SUELO
-        // ==========================================
-
-        if (
-            colision.enPlataforma
-        ) {
-
+        if (colision.enPlataforma) {
             enElSuelo = true;
-
             velocidadY = 0;
-
-        } else if (
-            marioY <=
-            nivelSuelo
-        ) {
-
-            marioY =
-                nivelSuelo;
-
+        } else if (marioY <= nivelSuelo) {
+            marioY = nivelSuelo;
             velocidadY = 0;
-
             enElSuelo = true;
-
         } else {
-
             enElSuelo = false;
         }
 
-        // ==========================================
-        // DETECCIONES
-        // ==========================================
-
-        // PRIMERA VEZ:
-        // hace aparecer la planta.
         comprobarPlanta2SobreTubo();
-
-        // Moneda.
         comprobarContactoMoneda();
-
-        // SEGUNDA VEZ:
-        // permite entrar a la tubería.
         comprobarEntradaTubo();
-
-        // ==========================================
-        // ANIMACIÓN DE MARIO
-        // ==========================================
+        comprobarEntradaTubosJuegos();
 
         mario.className = '';
 
         if (marioEsFantasma) {
-
-            mario.classList.add(
-                'mario-fantasma'
-            );
-
+            mario.classList.add('mario-fantasma');
         } else if (!enElSuelo) {
-
-            mario.classList.add(
-                'mario-saltando'
-            );
-
+            mario.classList.add('mario-saltando');
         } else if (moviendose) {
-
-            mario.classList.add(
-                'mario-corriendo'
-            );
-
+            mario.classList.add('mario-corriendo');
         } else {
-
-            mario.classList.add(
-                'mario-idle'
-            );
+            mario.classList.add('mario-idle');
         }
-    }
 
-    // ==========================================
-    // MARIO MUERTO / FANTASMA
-    // ==========================================
-    else if (
+    } else if (
         marioMuerto &&
         marioEsFantasma
     ) {
+        marioY += velocidadY;
 
-        marioY +=
-            velocidadY;
+        velocidadY -= gravedad;
 
-        velocidadY -=
-            gravedad;
-
-        if (
-            marioY <
-            nivelSuelo
-        ) {
-
-            marioY =
-                nivelSuelo;
-
+        if (marioY < nivelSuelo) {
+            marioY = nivelSuelo;
             velocidadY = 0;
         }
-    }
 
-    // ==========================================
-    // POSICIÓN VISUAL
-    // ==========================================
+        mario.className = '';
+        mario.classList.add('mario-fantasma');
+    }
 
     mario.style.transform =
         `scaleX(${direccion * 1.2}) scaleY(1.2)`;
@@ -1156,28 +815,25 @@ function actualizar() {
     mario.style.bottom =
         marioY + 'px';
 
-    requestAnimationFrame(
-        actualizar
-    );
+    requestAnimationFrame(actualizar);
 }
 
-// ======================================================
-// INICIALIZACIÓN
-// ======================================================
-
-// Planta 2 empieza completamente escondida.
 if (planta2) {
-
     planta2Arriba = false;
-
     planta2Aparecida = false;
 
-    planta2.style.bottom =
-        '30px';
-
-    planta2.style.display =
-        'none';
+    planta2.style.bottom = '30px';
+    planta2.style.display = 'none';
 }
 
-// Iniciar juego.
+if (hongo) {
+    hongo.style.display = 'none';
+    hongo.style.opacity = '1';
+}
+
+if (monedaTuberia) {
+    monedaTuberia.classList.add('oculto');
+    monedaTuberia.style.display = 'none';
+}
+
 actualizar();
