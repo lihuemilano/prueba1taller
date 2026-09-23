@@ -30,7 +30,6 @@ body {
 }
 
 
-/* Indicador Teclas WASD */
 
 #instrucciones-teclas {
     position: absolute;
@@ -72,7 +71,7 @@ body {
 }
 
 
-/* Modal ML */
+
 
 #modal-ml {
     position: absolute;
@@ -125,7 +124,7 @@ body {
 }
 
 
-/* === MARIO Y SPRITES === */
+
 
 #mario {
     width: 48px;
@@ -142,14 +141,13 @@ body {
 }
 
 
-/* Skins y estados de Mario */
+
 
 #mario.mario-idle {
     background-image: url('https://i2.wp.com/webstockreview.net/images/mario-clipart-pixel-mario-13.png');
 }
 
 #mario.mario-corriendo {
-    /* Aquí se conectará la sprite sheet de correr que pases */
     background-image: url('https://i2.wp.com/webstockreview.net/images/mario-clipart-pixel-mario-13.png');
 }
 
@@ -160,7 +158,6 @@ body {
 }
 
 #mario.mario-agachado {
-    /* Estado para cuando baja por la tubería */
     background-image: url('https://i2.wp.com/webstockreview.net/images/mario-clipart-pixel-mario-13.png');
     transform: scaleY(0.8) !important;
 }
@@ -173,7 +170,6 @@ body {
     bottom: -20px !important;
     opacity: 0;
     z-index: 4;
-    /* Pasa por detrás del borde frontal del tubo */
 }
 
 .bloque {
@@ -204,7 +200,6 @@ body {
 #tubo-entrada {
     position: absolute;
     bottom: -100px;
-    /* Escondida abajo */
     transition: bottom 0.6s ease-out;
     background-image: url('https://cdn.pixabay.com/photo/2013/07/12/13/52/super-mario-brothers-147465_1280.png');
     background-size: contain;
@@ -214,7 +209,6 @@ body {
 }
 
 
-/* Estado cuando se golpea el bloque: sube al nivel del suelo */
 
 #tubo-entrada.visible {
     bottom: 50px !important;
