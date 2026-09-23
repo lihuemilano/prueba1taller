@@ -9,13 +9,15 @@ const cartel5 = document.getElementById('cartel-ml5');
 const cartel6 = document.getElementById('cartel-ml6');
 const tituloInicial = document.getElementById('titulo-inicial');
 const cartel7 = document.getElementById('cartel7');
-const ANCHO_MUNDO = 3000;
+
+const tuberia = document.getElementById('tuberia');
+
+const ANCHO_MUNDO = 2300;
 const nivelSuelo = 50;
-const tuberiaFifa = document.getElementById('tuberia-fifa');
-const tuberiaCreatures = document.getElementById('tuberia-creatures');
+
+const hongo = document.getElementById('hongo');
 
 let entrandoTuberia = false;
-
 
 let marioX = 171;
 let marioY = 230;
@@ -31,14 +33,12 @@ const velocidadX = 7;
 const gravedad = 0.8;
 const fuerzaSalto = 17;
 
-
 const teclas = {
-    w: false,
-    a: false,
-    s: false,
-    d: false
+    arrowup: false,
+    arrowleft: false,
+    arrowright: false,
+    arrowdown: false
 };
-
 
 window.addEventListener('keydown', (e) => {
 
@@ -47,9 +47,7 @@ window.addEventListener('keydown', (e) => {
     if (teclas.hasOwnProperty(tecla)) {
         teclas[tecla] = true;
     }
-
 });
-
 
 window.addEventListener('keyup', (e) => {
 
@@ -58,10 +56,10 @@ window.addEventListener('keyup', (e) => {
     if (teclas.hasOwnProperty(tecla)) {
         teclas[tecla] = false;
     }
-
 });
 
 function ocultarTituloInicial() {
+
     if (tituloInicial) {
         tituloInicial.classList.add('oculto');
     }
@@ -75,11 +73,9 @@ function actualizarCamara() {
         marioX -
         (anchoPantalla / 3);
 
-
     if (camaraX < 0) {
         camaraX = 0;
     }
-
 
     const maxCamaraX =
         Math.max(
@@ -88,16 +84,13 @@ function actualizarCamara() {
             anchoPantalla
         );
 
-
     if (camaraX > maxCamaraX) {
         camaraX = maxCamaraX;
     }
 
-
     escenario.style.transform =
         `translateX(${-camaraX}px)`;
 }
-
 
 function resolverColisiones(
     siguienteX,
@@ -109,21 +102,14 @@ function resolverColisiones(
             '.obstaculo'
         );
 
-
     const marioWidth = 48;
     const marioHeight = 60;
 
-
     let resultado = {
-
         x: siguienteX,
-
         y: siguienteY,
-
         enPlataforma: false
-
     };
-
 
     obstaculos.forEach(elem => {
 
@@ -132,21 +118,16 @@ function resolverColisiones(
                 elem.style.left
             ) || elem.offsetLeft;
 
-
         const bBottom =
             parseInt(
                 elem.style.bottom
             ) || 50;
 
-
         const bWidth =
             elem.offsetWidth;
 
-
         const bHeight =
             elem.offsetHeight;
-
-
 
         const solapeX =
             (
@@ -160,7 +141,6 @@ function resolverColisiones(
                 bWidth
             );
 
-
         const solapeY =
             (
                 resultado.y +
@@ -172,7 +152,6 @@ function resolverColisiones(
                 bBottom +
                 bHeight
             );
-
 
         if (
             solapeX &&
@@ -191,9 +170,7 @@ function resolverColisiones(
                     bWidth
                 );
 
-
             if (previoSolapeX) {
-
 
                 if (
                     velocidadY <= 0 &&
@@ -207,9 +184,7 @@ function resolverColisiones(
                         bBottom +
                         bHeight;
 
-
                     velocidadY = 0;
-
 
                     resultado.enPlataforma =
                         true;
@@ -226,9 +201,7 @@ function resolverColisiones(
                         bBottom -
                         marioHeight;
 
-
                     velocidadY = 0;
-
 
                     if (
                         elem.id ===
@@ -242,11 +215,8 @@ function resolverColisiones(
                             'usado'
                         );
 
-
                         activarBloque1();
-
                     }
-
 
                     if (
                         elem.id ===
@@ -260,12 +230,8 @@ function resolverColisiones(
                             'usado'
                         );
 
-
                         activarBloque2();
-
                     }
-
-
 
                     if (
                         elem.id ===
@@ -279,11 +245,8 @@ function resolverColisiones(
                             'usado'
                         );
 
-
                         activarBloque3();
-
                     }
-
 
                     if (
                         elem.id ===
@@ -297,11 +260,8 @@ function resolverColisiones(
                             'usado'
                         );
 
-
                         activarBloque4();
-
                     }
-
                 }
 
             } else {
@@ -325,130 +285,96 @@ function resolverColisiones(
                     resultado.x =
                         bLeft +
                         bWidth;
-
                 }
-
             }
-
         }
-
     });
 
-
     return resultado;
-}
-
-function comprobarCartel7() {
-
-    const finalTuberia = 1900 + 90;
-
-    // Mario ya cruzó completamente la cañería
-    if (
-        marioX > finalTuberia &&
-        !cartel7Activado
-    ) {
-
-        cartel7Activado = true;
-
-        ocultarTodosLosCarteles();
-
-        if (cartel7) {
-            cartel7.classList.remove('oculto');
-        }
-    }
 }
 
 function comprobarEntradaTuberia() {
 
     if (entrandoTuberia) return;
 
-    if (!teclas.s) return;
+    if (!teclas.arrowdown) return;
+
+    if (!tuberia) return;
 
     const marioWidth = 48;
 
-    // =========================
-    // CAÑERÍA FIFA
-    // =========================
+    const tuberiaX =
+        parseInt(
+            tuberia.style.left
+        ) || tuberia.offsetLeft;
 
-    const fifaX = 1900;
-    const fifaWidth = 120;
-    const fifaTop = 160;
+    const tuberiaWidth =
+        tuberia.offsetWidth;
 
-    const sobreFifa =
-        marioX + marioWidth > fifaX &&
-        marioX < fifaX + fifaWidth &&
-        marioY >= fifaTop;
+    const tuberiaTop =
+        parseInt(
+            tuberia.style.bottom
+        ) || 50;
 
+    const sobreTuberia =
+        marioX + marioWidth >
+        tuberiaX &&
+        marioX <
+        tuberiaX +
+        tuberiaWidth &&
+        marioY >=
+        tuberiaTop;
 
-    // =========================
-    // CAÑERÍA CREATURES
-    // =========================
-
-    const creaturesX = 2700;
-    const creaturesWidth = 120;
-    const creaturesTop = 160;
-
-    const sobreCreatures =
-        marioX + marioWidth > creaturesX &&
-        marioX < creaturesX + creaturesWidth &&
-        marioY >= creaturesTop;
-
-
-    // =========================
-    // ENTRAR A FIFA
-    // =========================
-
-    if (sobreFifa) {
+    if (sobreTuberia) {
 
         entrarPorTuberia(
-            'indexfifa.html',
-            fifaX,
-            fifaWidth
+            'nivel2.html',
+            tuberiaX,
+            tuberiaWidth
         );
-
-        return;
-    }
-
-
-    // =========================
-    // ENTRAR A CREATURES
-    // =========================
-
-    if (sobreCreatures) {
-
-        entrarPorTuberia(
-            'indexcreatures.html',
-            creaturesX,
-            creaturesWidth
-        );
-
-        return;
     }
 }
 
-function entrarPorTuberia(pagina, tuberiaX, tuberiaWidth) {
+function entrarPorTuberia(
+    pagina,
+    tuberiaX,
+    tuberiaWidth
+) {
 
     if (entrandoTuberia) return;
 
     entrandoTuberia = true;
 
-    marioX = tuberiaX + (tuberiaWidth / 2) - 24;
+    marioX =
+        tuberiaX +
+        (tuberiaWidth / 2) -
+        24;
+
     marioY = 160;
 
-    mario.style.left = marioX + 'px';
-    mario.style.bottom = marioY + 'px';
+    mario.style.left =
+        marioX + 'px';
 
-    teclas.a = false;
-    teclas.d = false;
-    teclas.w = false;
-    teclas.s = false;
+    mario.style.bottom =
+        marioY + 'px';
+
+    teclas.arrowleft = false;
+    teclas.arrowright = false;
+    teclas.arrowup = false;
+    teclas.arrowdown = false;
 
     mario.className = '';
-    mario.classList.add('mario-idle');
-    mario.classList.add('bajando-tubo');
+
+    mario.classList.add(
+        'mario-idle',
+        'bajando-tubo'
+    );
 
     setTimeout(() => {
-        window.location.href = pagina;
+
+        window.location.href =
+            pagina;
+
     }, 800);
 }
 
@@ -457,6 +383,7 @@ function ocultarTodosLosCarteles() {
     if (tituloInicial) {
         tituloInicial.classList.add('oculto');
     }
+
     if (cartel1) {
         cartel1.classList.add('oculto');
     }
@@ -480,124 +407,111 @@ function ocultarTodosLosCarteles() {
     if (cartel6) {
         cartel6.classList.add('oculto');
     }
-    if (cartel7) cartel7.classList.add('oculto');
 
+    if (cartel7) {
+        cartel7.classList.add('oculto');
+    }
 }
-
 
 function activarBloque1() {
 
     ocultarTodosLosCarteles();
 
-
     if (cartel1) {
+
         ocultarTituloInicial();
+
         cartel1.classList.remove(
             'oculto'
         );
-
     }
-
 }
-
-
-// ======================================================
-// CARTEL 2
-// ======================================================
 
 function activarBloque2() {
 
     ocultarTodosLosCarteles();
-
 
     if (cartel2) {
 
         cartel2.classList.remove(
             'oculto'
         );
-
     }
-
 }
-
-
-// ======================================================
-// CARTEL 3
-// ======================================================
 
 function activarBloque3() {
 
     ocultarTodosLosCarteles();
-
 
     if (cartel3) {
 
         cartel3.classList.remove(
             'oculto'
         );
-
     }
-
 }
-
-
-// ======================================================
-// CARTEL 4
-// ======================================================
 
 function activarBloque4() {
 
     ocultarTodosLosCarteles();
-
 
     if (cartel4) {
 
         cartel4.classList.remove(
             'oculto'
         );
-
     }
-
 }
-
 
 function actualizar() {
 
-    let nuevoX = marioX;
+    if (entrandoTuberia) {
 
-    let moviendose = false;
+        mario.style.left =
+            marioX + 'px';
 
+        mario.style.bottom =
+            marioY + 'px';
 
-    if (teclas.a) {
+        requestAnimationFrame(
+            actualizar
+        );
 
-        nuevoX -= velocidadX;
+        return;
+    }
+
+    let nuevoX =
+        marioX;
+
+    let moviendose =
+        false;
+
+    if (teclas.arrowleft) {
+
+        nuevoX -=
+            velocidadX;
 
         direccion = -1;
 
         moviendose = true;
-
     }
 
+    if (teclas.arrowright) {
 
-    if (teclas.d) {
-
-        nuevoX += velocidadX;
+        nuevoX +=
+            velocidadX;
 
         direccion = 1;
 
         moviendose = true;
-
     }
 
     if (nuevoX < 0) {
 
         nuevoX = 0;
-
     }
 
-
     const anchoMario = 48;
-
 
     if (
         nuevoX >
@@ -608,12 +522,10 @@ function actualizar() {
         nuevoX =
             ANCHO_MUNDO -
             anchoMario;
-
     }
 
-
     if (
-        teclas.w &&
+        teclas.arrowup &&
         enElSuelo
     ) {
 
@@ -621,18 +533,14 @@ function actualizar() {
             fuerzaSalto;
 
         enElSuelo = false;
-
     }
-
 
     let nuevoY =
         marioY +
         velocidadY;
 
-
-    velocidadY -= gravedad;
-
-
+    velocidadY -=
+        gravedad;
 
     const colision =
         resolverColisiones(
@@ -640,14 +548,11 @@ function actualizar() {
             nuevoY
         );
 
-
     marioX =
         colision.x;
 
-
     marioY =
         colision.y;
-
 
     if (
         colision.enPlataforma
@@ -658,7 +563,8 @@ function actualizar() {
         velocidadY = 0;
 
     } else if (
-        marioY <= nivelSuelo
+        marioY <=
+        nivelSuelo
     ) {
 
         marioY =
@@ -671,12 +577,9 @@ function actualizar() {
     } else {
 
         enElSuelo = false;
-
     }
 
-
     mario.className = '';
-
 
     if (!enElSuelo) {
 
@@ -695,25 +598,19 @@ function actualizar() {
         mario.classList.add(
             'mario-idle'
         );
-
     }
-
 
     mario.style.transform =
         `scaleX(${direccion * 1.2}) scaleY(1.2)`;
 
-
     mario.style.left =
         marioX + 'px';
-
 
     mario.style.bottom =
         marioY + 'px';
 
-
-
     actualizarCamara();
-    comprobarCartel7();
+
     comprobarEntradaTuberia();
 
     requestAnimationFrame(
@@ -721,23 +618,15 @@ function actualizar() {
     );
 }
 
-
-// ======================================================
-// INICIALIZACIÓN
-// ======================================================
-
-// Posición inicial
 mario.style.left =
     marioX + 'px';
 
 mario.style.bottom =
     marioY + 'px';
 
-
-// Mario mirando hacia la derecha
 mario.style.transform =
     'scaleX(1.2) scaleY(1.2)';
 
-
 entrandoTuberia = false;
+
 actualizar();
