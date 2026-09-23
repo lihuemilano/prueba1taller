@@ -1,632 +1,112 @@
-const mario = document.getElementById('mario');
-const escenario = document.getElementById('escenario');
+<!DOCTYPE html>
 
-const cartel1 = document.getElementById('cartel-ml');
-const cartel2 = document.getElementById('cartel-ml2');
-const cartel3 = document.getElementById('cartel-ml3');
-const cartel4 = document.getElementById('cartel-ml4');
-const cartel5 = document.getElementById('cartel-ml5');
-const cartel6 = document.getElementById('cartel-ml6');
-const tituloInicial = document.getElementById('titulo-inicial');
-const cartel7 = document.getElementById('cartel7');
+<html lang="es">
 
-const tuberia = document.getElementById('tuberia');
+<head>
+    <meta charset="UTF-8">
+    <title>Mario ML - Nivel 2</title>
+    <link rel="stylesheet" href="style3A.css">
+</head>
 
-const ANCHO_MUNDO = 2300;
-const nivelSuelo = 50;
+<body id="juego-nivel2">
 
-const hongo = document.getElementById('hongo');
+    <div id="juego">
+        <div id="escenario">
+            <div id="mundo">
 
-let entrandoTuberia = false;
+                <div id="titulo-inicial">
+                    <h2>¿Cómo aprende una <span style="color: gold;">computadora?</span>
+                    </h2>
+                </div>
 
-let marioX = 171;
-let marioY = 230;
 
-let velocidadY = 0;
-let enElSuelo = false;
-let direccion = 1;
+                <!-- Bloque amarillo interactivo -->
+                <div class="bloque obstaculo" style="left: 600px; bottom: 190px; width: 50px; height: 50px;"></div>
 
-let camaraX = 0;
-let cartel7Activado = false;
+                <div class="bloque-amarillo obstaculo" style="left: 650px; bottom: 190px; width: 50px; height: 50px;" id="bloque-mensaje-ml"></div>
+                <div class="bloque obstaculo" style="left: 700px; bottom: 190px; width: 50px; height: 50px;"></div>
 
-const velocidadX = 7;
-const gravedad = 0.8;
-const fuerzaSalto = 17;
 
-const teclas = {
-    arrowup: false,
-    arrowleft: false,
-    arrowright: false,
-    arrowdown: false
-};
-
-window.addEventListener('keydown', (e) => {
+                <div id="cartel-ml" class="oculto">
 
-    const tecla = e.key.toLowerCase();
-
-    if (teclas.hasOwnProperty(tecla)) {
-        teclas[tecla] = true;
-    }
-});
-
-window.addEventListener('keyup', (e) => {
-
-    const tecla = e.key.toLowerCase();
-
-    if (teclas.hasOwnProperty(tecla)) {
-        teclas[tecla] = false;
-    }
-});
-
-function ocultarTituloInicial() {
-
-    if (tituloInicial) {
-        tituloInicial.classList.add('oculto');
-    }
-}
-
-function actualizarCamara() {
-
-    const anchoPantalla = window.innerWidth;
-
-    camaraX =
-        marioX -
-        (anchoPantalla / 3);
-
-    if (camaraX < 0) {
-        camaraX = 0;
-    }
-
-    const maxCamaraX =
-        Math.max(
-            0,
-            ANCHO_MUNDO -
-            anchoPantalla
-        );
-
-    if (camaraX > maxCamaraX) {
-        camaraX = maxCamaraX;
-    }
-
-    escenario.style.transform =
-        `translateX(${-camaraX}px)`;
-}
-
-function resolverColisiones(
-    siguienteX,
-    siguienteY
-) {
-
-    const obstaculos =
-        document.querySelectorAll(
-            '.obstaculo'
-        );
-
-    const marioWidth = 48;
-    const marioHeight = 60;
-
-    let resultado = {
-        x: siguienteX,
-        y: siguienteY,
-        enPlataforma: false
-    };
-
-    obstaculos.forEach(elem => {
-
-        const bLeft =
-            parseInt(
-                elem.style.left
-            ) || elem.offsetLeft;
-
-        const bBottom =
-            parseInt(
-                elem.style.bottom
-            ) || 50;
-
-        const bWidth =
-            elem.offsetWidth;
-
-        const bHeight =
-            elem.offsetHeight;
-
-        const solapeX =
-            (
-                resultado.x +
-                marioWidth >
-                bLeft
-            ) &&
-            (
-                resultado.x <
-                bLeft +
-                bWidth
-            );
-
-        const solapeY =
-            (
-                resultado.y +
-                marioHeight >
-                bBottom
-            ) &&
-            (
-                resultado.y <
-                bBottom +
-                bHeight
-            );
-
-        if (
-            solapeX &&
-            solapeY
-        ) {
-
-            const previoSolapeX =
-                (
-                    marioX +
-                    marioWidth >
-                    bLeft
-                ) &&
-                (
-                    marioX <
-                    bLeft +
-                    bWidth
-                );
-
-            if (previoSolapeX) {
-
-                if (
-                    velocidadY <= 0 &&
-                    marioY >=
-                    bBottom +
-                    bHeight -
-                    20
-                ) {
-
-                    resultado.y =
-                        bBottom +
-                        bHeight;
-
-                    velocidadY = 0;
-
-                    resultado.enPlataforma =
-                        true;
-
-                } else if (
-                    velocidadY > 0 &&
-                    marioY +
-                    marioHeight <=
-                    bBottom +
-                    20
-                ) {
-
-                    resultado.y =
-                        bBottom -
-                        marioHeight;
-
-                    velocidadY = 0;
-
-                    if (
-                        elem.id ===
-                        'bloque-mensaje-ml' &&
-                        !elem.classList.contains(
-                            'usado'
-                        )
-                    ) {
-
-                        elem.classList.add(
-                            'usado'
-                        );
-
-                        activarBloque1();
-                    }
-
-                    if (
-                        elem.id ===
-                        'bloque-mensaje-ml2' &&
-                        !elem.classList.contains(
-                            'usado'
-                        )
-                    ) {
-
-                        elem.classList.add(
-                            'usado'
-                        );
-
-                        activarBloque2();
-                    }
-
-                    if (
-                        elem.id ===
-                        'bloque-mensaje-ml3' &&
-                        !elem.classList.contains(
-                            'usado'
-                        )
-                    ) {
-
-                        elem.classList.add(
-                            'usado'
-                        );
-
-                        activarBloque3();
-                    }
-
-                    if (
-                        elem.id ===
-                        'bloque-mensaje-ml4' &&
-                        !elem.classList.contains(
-                            'usado'
-                        )
-                    ) {
-
-                        elem.classList.add(
-                            'usado'
-                        );
-
-                        activarBloque4();
-                    }
-                }
-
-            } else {
-
-                if (
-                    marioX +
-                    marioWidth <=
-                    bLeft
-                ) {
-
-                    resultado.x =
-                        bLeft -
-                        marioWidth;
-
-                } else if (
-                    marioX >=
-                    bLeft +
-                    bWidth
-                ) {
-
-                    resultado.x =
-                        bLeft +
-                        bWidth;
-                }
-            }
-        }
-    });
-
-    return resultado;
-}
-
-function comprobarEntradaTuberia() {
-
-    if (entrandoTuberia) return;
-
-    if (!teclas.arrowdown) return;
-
-    if (!tuberia) return;
-
-    const marioWidth = 48;
-
-    const tuberiaX =
-        parseInt(
-            tuberia.style.left
-        ) || tuberia.offsetLeft;
-
-    const tuberiaWidth =
-        tuberia.offsetWidth;
-
-    const tuberiaTop =
-        parseInt(
-            tuberia.style.bottom
-        ) || 50;
-
-    const sobreTuberia =
-        marioX + marioWidth >
-        tuberiaX &&
-        marioX <
-        tuberiaX +
-        tuberiaWidth &&
-        marioY >=
-        tuberiaTop;
-
-    if (sobreTuberia) {
-
-        entrarPorTuberia(
-            'nivel2.html',
-            tuberiaX,
-            tuberiaWidth
-        );
-    }
-}
-
-function entrarPorTuberia(
-    pagina,
-    tuberiaX,
-    tuberiaWidth
-) {
-
-    if (entrandoTuberia) return;
-
-    entrandoTuberia = true;
-
-    marioX =
-        tuberiaX +
-        (tuberiaWidth / 2) -
-        24;
-
-    marioY = 160;
-
-    mario.style.left =
-        marioX + 'px';
-
-    mario.style.bottom =
-        marioY + 'px';
-
-    teclas.arrowleft = false;
-    teclas.arrowright = false;
-    teclas.arrowup = false;
-    teclas.arrowdown = false;
-
-    mario.className = '';
-
-    mario.classList.add(
-        'mario-idle',
-        'bajando-tubo'
-    );
-
-    setTimeout(() => {
-
-        window.location.href =
-            pagina;
-
-    }, 800);
-}
-
-function ocultarTodosLosCarteles() {
-
-    if (tituloInicial) {
-        tituloInicial.classList.add('oculto');
-    }
-
-    if (cartel1) {
-        cartel1.classList.add('oculto');
-    }
-
-    if (cartel2) {
-        cartel2.classList.add('oculto');
-    }
-
-    if (cartel3) {
-        cartel3.classList.add('oculto');
-    }
-
-    if (cartel4) {
-        cartel4.classList.add('oculto');
-    }
+                    <div class="texto-ml">
+                        <h2>
+                            permite que las maquinas aprendan de datos y reconozcan patrones sin recibir instrucciones para cada situación.
+                        </h2>
+                    </div>
 
-    if (cartel5) {
-        cartel5.classList.add('oculto');
-    }
+                    <div class="proceso-ml">
 
-    if (cartel6) {
-        cartel6.classList.add('oculto');
-    }
+                        <div class="etapa-ml">
+                            <div class="icono-ml">📚</div>
+                            <span>Datos</span>
+                        </div>
 
-    if (cartel7) {
-        cartel7.classList.add('oculto');
-    }
-}
+                        <div class="flecha-ml">→</div>
 
-function activarBloque1() {
+                        <div class="etapa-ml">
+                            <div class="icono-ml entrenamiento">🏋️‍♂️</div>
+                            <span>Entrenamiento</span>
+                        </div>
 
-    ocultarTodosLosCarteles();
+                        <div class="flecha-ml">→</div>
 
-    if (cartel1) {
+                        <div class="etapa-ml">
+                            <div class="icono-ml">👥</div>
+                            <span>Modelo</span>
+                        </div>
 
-        ocultarTituloInicial();
+                        <div class="flecha-ml">→</div>
 
-        cartel1.classList.remove(
-            'oculto'
-        );
-    }
-}
+                        <div class="etapa-ml">
+                            <div class="icono-ml">💡</div>
+                            <span>Proyección</span>
+                        </div>
 
-function activarBloque2() {
+                    </div>
 
-    ocultarTodosLosCarteles();
+                </div>
 
-    if (cartel2) {
+                <div class="tuberia obstaculo" style="left: 950px; bottom: 50px; width: 80px; height: 110px;"></div>
 
-        cartel2.classList.remove(
-            'oculto'
-        );
-    }
-}
 
-function activarBloque3() {
+                <!-- Tubería 1 + Planta 1 -->
+                <div class="tuberia obstaculo" style="left: 150px; bottom: 50px; width: 90px; height: 180px;"></div>
 
-    ocultarTodosLosCarteles();
+                <div class="bloque obstaculo" style="left: 1400px; bottom: 190px; width: 50px; height: 50px;"></div>
 
-    if (cartel3) {
+                <div class="bloque-amarillo obstaculo" style="left: 1450px; bottom: 190px; width: 50px; height: 50px;" id="bloque-mensaje-ml2"></div>
+                <div class="bloque obstaculo" style="left: 1500px; bottom: 190px; width: 50px; height: 50px;"></div>
+                <div class="bloque obstaculo" style="left: 1550px; bottom: 190px; width: 50px; height: 50px;"></div>
 
-        cartel3.classList.remove(
-            'oculto'
-        );
-    }
-}
 
-function activarBloque4() {
+                <div id="cartel-ml2" class="oculto">
+                    <h2>lo hace a traves del analisis <br>de ejemplos y patrones</h2>
+                    <img src="https://cdn-icons-png.flaticon.com/512/1006/1006638.png" alt="">
 
-    ocultarTodosLosCarteles();
+                </div>
 
-    if (cartel4) {
+                <div class="bloque-amarillo obstaculo" style="left: 1600px; bottom: 190px; width: 50px; height: 50px;" id="bloque-mensaje-ml3"></div>
+                <div id="cartel-ml3" class="oculto">
+                    <h2>utiliza lo aprendido para realizar<br> predicciones o tomar decisiones</h2>
+                    <img src="https://cdn-icons-png.flaticon.com/512/910/910373.png" alt="">
+                </div>
 
-        cartel4.classList.remove(
-            'oculto'
-        );
-    }
-}
 
-function actualizar() {
+                <div id="tuberia" class="tuberia obstaculo" style="left: 1900px; bottom: 50px; width: 90px; height: 110px;">
+                </div>
 
-    if (entrandoTuberia) {
 
-        mario.style.left =
-            marioX + 'px';
+                <!-- Mario -->
+                <div id="mario" class="mario-idle" style="left: 171px; bottom: 230px;"></div>
+            </div>
 
-        mario.style.bottom =
-            marioY + 'px';
+            <!-- Piso -->
+            <div id="piso"></div>
+        </div>
+    </div>
 
-        requestAnimationFrame(
-            actualizar
-        );
+    <script src="script3A.js"></script>
+</body>
 
-        return;
-    }
-
-    let nuevoX =
-        marioX;
-
-    let moviendose =
-        false;
-
-    if (teclas.arrowleft) {
-
-        nuevoX -=
-            velocidadX;
-
-        direccion = -1;
-
-        moviendose = true;
-    }
-
-    if (teclas.arrowright) {
-
-        nuevoX +=
-            velocidadX;
-
-        direccion = 1;
-
-        moviendose = true;
-    }
-
-    if (nuevoX < 0) {
-
-        nuevoX = 0;
-    }
-
-    const anchoMario = 48;
-
-    if (
-        nuevoX >
-        ANCHO_MUNDO -
-        anchoMario
-    ) {
-
-        nuevoX =
-            ANCHO_MUNDO -
-            anchoMario;
-    }
-
-    if (
-        teclas.arrowup &&
-        enElSuelo
-    ) {
-
-        velocidadY =
-            fuerzaSalto;
-
-        enElSuelo = false;
-    }
-
-    let nuevoY =
-        marioY +
-        velocidadY;
-
-    velocidadY -=
-        gravedad;
-
-    const colision =
-        resolverColisiones(
-            nuevoX,
-            nuevoY
-        );
-
-    marioX =
-        colision.x;
-
-    marioY =
-        colision.y;
-
-    if (
-        colision.enPlataforma
-    ) {
-
-        enElSuelo = true;
-
-        velocidadY = 0;
-
-    } else if (
-        marioY <=
-        nivelSuelo
-    ) {
-
-        marioY =
-            nivelSuelo;
-
-        velocidadY = 0;
-
-        enElSuelo = true;
-
-    } else {
-
-        enElSuelo = false;
-    }
-
-    mario.className = '';
-
-    if (!enElSuelo) {
-
-        mario.classList.add(
-            'mario-saltando'
-        );
-
-    } else if (moviendose) {
-
-        mario.classList.add(
-            'mario-corriendo'
-        );
-
-    } else {
-
-        mario.classList.add(
-            'mario-idle'
-        );
-    }
-
-    mario.style.transform =
-        `scaleX(${direccion * 1.2}) scaleY(1.2)`;
-
-    mario.style.left =
-        marioX + 'px';
-
-    mario.style.bottom =
-        marioY + 'px';
-
-    actualizarCamara();
-
-    comprobarEntradaTuberia();
-
-    requestAnimationFrame(
-        actualizar
-    );
-}
-
-mario.style.left =
-    marioX + 'px';
-
-mario.style.bottom =
-    marioY + 'px';
-
-mario.style.transform =
-    'scaleX(1.2) scaleY(1.2)';
-
-entrandoTuberia = false;
-
-actualizar();
+</html>
