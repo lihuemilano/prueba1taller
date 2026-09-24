@@ -393,21 +393,6 @@ function ocultarTodosLosCarteles() {
         cartel3.classList.add('oculto');
     }
 
-    if (cartel4) {
-        cartel4.classList.add('oculto');
-    }
-
-    if (cartel5) {
-        cartel5.classList.add('oculto');
-    }
-
-    if (cartel6) {
-        cartel6.classList.add('oculto');
-    }
-
-    if (cartel7) {
-        cartel7.classList.add('oculto');
-    }
 }
 
 function activarBloque1() {
@@ -448,17 +433,7 @@ function activarBloque3() {
     }
 }
 
-function activarBloque4() {
 
-    ocultarTodosLosCarteles();
-
-    if (cartel4) {
-
-        cartel4.classList.remove(
-            'oculto'
-        );
-    }
-}
 
 function actualizar() {
 
