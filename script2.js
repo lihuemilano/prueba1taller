@@ -6,6 +6,9 @@ let entrandoJuego = false;
 let tuberiasJuegosActivas = false;
 
 
+const tuberiaFinal = document.getElementById('tuberia-final');
+
+
 const cartelJuego1 = document.getElementById('cartel-juego1');
 const cartelJuego2 = document.getElementById('cartel-juego2');
 
@@ -20,11 +23,12 @@ const cartel4 = document.getElementById('cartel-ml4');
 const cartel5 = document.getElementById('cartel-ml5');
 const cartel6 = document.getElementById('cartel-ml6');
 const cartel7 = document.getElementById('cartel-ml7');
+const cartel8 = document.getElementById('cartel-ml8');
 
 const hongo = document.getElementById('hongo');
 const monedaTuberia = document.getElementById('moneda-tuberia');
 
-const ANCHO_MUNDO = 4000;
+const ANCHO_MUNDO = 4600;
 const nivelSuelo = 50;
 
 const tuboPlantaX = 2500;
@@ -228,6 +232,7 @@ function resolverColisiones(siguienteX, siguienteY) {
                 elem.id === 'bloque-mensaje-ml7' &&
                 !elem.classList.contains('usado')
             ) {
+
                 elem.classList.add('usado');
                 activarBloque7();
                 setTimeout(() => {
@@ -251,6 +256,14 @@ function resolverColisiones(siguienteX, siguienteY) {
 
                 }, 500);
             }
+            if (
+                elem.id === 'bloque-mensaje-ml8' &&
+                !elem.classList.contains('usado')
+            ) {
+                elem.classList.add('usado');
+                activarBloque8();
+            }
+
 
         }
     });
@@ -266,6 +279,7 @@ function ocultarTodosLosCarteles() {
     if (cartel5) cartel5.classList.add('oculto');
     if (cartel6) cartel6.classList.add('oculto');
     if (cartel7) cartel7.classList.add('oculto');
+    if (cartel8) cartel8.classList.add('oculto');
 
 }
 
@@ -309,6 +323,14 @@ function activarBloque7() {
     }
 }
 
+function activarBloque8() {
+    ocultarTodosLosCarteles();
+
+    if (cartel8) {
+        cartel8.classList.remove('oculto');
+    }
+}
+
 
 
 function comprobarPlanta2SobreTubo() {
@@ -341,7 +363,7 @@ function activarPlanta2() {
         requestAnimationFrame(() => {
             requestAnimationFrame(() => {
                 planta2.style.transition = 'bottom 0.4s ease-out';
-                planta2.style.bottom = '220px';  
+                planta2.style.bottom = '220px';
             });
         });
     }
@@ -578,7 +600,7 @@ function comprobarEntradaTubosJuegos() {
         if (
             marioCentro >= tuboX - 120 &&
             marioCentro <= tuboX + tuboAncho + 120 &&
-            Math.abs(marioY - 230) < 90
+            Math.abs(marioY - 230) < 100
         ) {
             entrarEnTuberiaJuego('indexcreatures.html');
             return;
@@ -592,7 +614,7 @@ function comprobarEntradaTubosJuegos() {
         if (
             marioCentro >= tuboX - 120 &&
             marioCentro <= tuboX + tuboAncho + 120 &&
-            Math.abs(marioY - 230) < 80
+            Math.abs(marioY - 230) < 100
         ) {
             entrarEnTuberiaJuego('indexfifa.html');
             return;
@@ -694,6 +716,65 @@ function comprobarEntradaTubo() {
     }
 }
 
+function comprobarEntradaTuboFinal() {
+    if (
+        bajandoTubo ||
+        marioMuerto ||
+        !teclas.arrowdown ||
+        !tuberiaFinal
+    ) {
+        return;
+    }
+
+    const centroMarioX = marioX + 24;
+
+    const tuboX = tuberiaFinal.offsetLeft;
+    const tuboAncho = tuberiaFinal.offsetWidth;
+
+    const sobreTuboX =
+        centroMarioX >= tuboX &&
+        centroMarioX <= tuboX + tuboAncho;
+
+    const sobreTuboY =
+        Math.abs(marioY - 220) < 15;
+
+    if (
+        sobreTuboX &&
+        sobreTuboY &&
+        enElSuelo
+    ) {
+        bajandoTubo = true;
+        controlesBloqueados = true;
+
+        marioX =
+            tuboX +
+            tuboAncho / 2 -
+            24;
+
+        mario.style.left =
+            marioX + 'px';
+
+        mario.className = '';
+
+        mario.classList.add(
+            'mario-agachado',
+            'bajando-tubo'
+        );
+
+        mario.style.transition =
+            'transform 0.7s ease, opacity 0.7s ease';
+
+        mario.style.transform =
+            'scale(0.2)';
+
+        mario.style.opacity = '0';
+
+        setTimeout(() => {
+            window.location.href = 'minijuego.html';
+        }, 800);
+    }
+}
+
 function actualizar() {
     actualizarCamara();
 
@@ -776,6 +857,7 @@ function actualizar() {
         comprobarContactoMoneda();
         comprobarEntradaTubo();
         comprobarEntradaTubosJuegos();
+        comprobarEntradaTuboFinal();
 
         mario.className = '';
 
