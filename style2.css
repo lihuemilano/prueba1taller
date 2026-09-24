@@ -26,7 +26,7 @@ body {
 
 #mundo {
     height: 100%;
-    width: 4000px;
+    width: 4600px;
     position: absolute;
     top: 0;
     left: 0;
@@ -34,7 +34,7 @@ body {
 }
 
 #piso {
-    width: 4000px;
+    width: 4600px;
     height: 50px;
     position: absolute;
     bottom: 0;
@@ -117,8 +117,8 @@ body {
     top: 0;
     left: 0;
     height: 100%;
-    width: 4000px;
-    min-width: 4000px;
+    width: 4600px;
+    min-width: 4600px;
     will-change: transform;
 }
 
@@ -134,10 +134,18 @@ body {
     z-index: 100;
 }
 
+#cartel-ml8 {
+    position: absolute;
+    left: 4000px;
+    bottom: 350px;
+    transform: translateX(-35%);
+    z-index: 100;
+}
+
 #cartel-ml2 {
     position: absolute;
     left: 1550px;
-   
+    /* Posición X alineada con el bloque 2 */
     bottom: 350px;
     transform: translateX(-35%);
     z-index: 100;
@@ -191,7 +199,8 @@ body {
 #cartel-ml2 h2,
 #cartel-ml5 h2,
 #cartel-ml6 h2,
-#cartel-ml7 h2 {
+#cartel-ml7 h2,
+#cartel-ml8 h2 {
     font-family: 'Bungee', cursive;
     color: #ffffff;
     margin: 0 0 8px 0;
