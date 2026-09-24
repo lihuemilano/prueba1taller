@@ -319,7 +319,7 @@ function comprobarEntradaTuberia() {
     const sobreTuberia =
         marioX + marioWidth >
         tuberiaX &&
-        marioX <=
+        marioX <
         tuberiaX +
         tuberiaWidth &&
         marioY >=
