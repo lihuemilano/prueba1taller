@@ -1,0 +1,329 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+/* ==========================================================================
+   VARIABLES DE TAMAÑO - MODIFICA AQUÍ LAS MEDIDAS CUANDO QUIERAS
+   ========================================================================== */
+
+:root {
+    --mario-width: 150px;
+    --mario-height: 60px;
+    --exe-width: 180px;
+    --exe-height: 90px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body,
+html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #000;
+    font-family: 'Press Start 2P', cursive, sans-serif;
+}
+
+#juego {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+#escenario {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+#mundo {
+    position: relative;
+    width: 3200px;
+    height: 100%;
+    background-size: cover;
+    background-repeat: repeat-x;
+}
+
+
+/* POSICIONAMIENTO Y TAMAÑOS DE PERSONAJES */
+
+#mario,
+#mario-exe,
+.tuberia,
+.cañeria-entrada,
+.bloque,
+.bloque-amarillo,
+.bloque-piso,
+.proyectil,
+.powerup {
+    position: absolute;
+    z-index: 100;
+}
+
+#mario {
+    width: var(--mario-width);
+    height: var(--mario-height);
+}
+
+#mario-exe {
+    width: var(--exe-width);
+    height: var(--exe-height);
+}
+
+#img-mario,
+#img-mario-exe {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+#piso-bloques {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 3200px;
+    height: 50px;
+    z-index: 90;
+}
+
+.bloque-piso {
+    width: 50px;
+    height: 50px;
+    bottom: 0;
+}
+
+
+/* HUD DEL JUEGO */
+
+#hud {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    right: 15px;
+    display: flex;
+    justify-content: space-between;
+    z-index: 500;
+    color: #fff;
+    font-size: 12px;
+    text-shadow: 2px 2px 0 #000;
+}
+
+.barra-hp-container {
+    width: 220px;
+    height: 18px;
+    background: #222;
+    border: 2px solid #fff;
+    margin-top: 6px;
+}
+
+#barra-hp-exe {
+    width: 100%;
+    height: 100%;
+    background: #d00;
+    transition: width 0.15s ease-out;
+}
+
+
+/* PANEL DE CONTROLES VISIBLE */
+
+#panel-controles {
+    position: fixed;
+    bottom: 15px;
+    left: 15px;
+    z-index: 500;
+    background: rgba(0, 0, 0, 0.75);
+    border: 2px solid #fff;
+    padding: 10px;
+    color: #fff;
+    font-size: 9px;
+    border-radius: 6px;
+    line-height: 1.6;
+}
+
+.titulo-controles {
+    color: #ff0;
+    margin-bottom: 5px;
+    text-align: center;
+    border-bottom: 1px solid #ff0;
+    padding-bottom: 3px;
+}
+
+.tecla {
+    background: #fff;
+    color: #000;
+    padding: 1px 4px;
+    border-radius: 3px;
+    font-weight: bold;
+}
+
+
+/* OVERLAY DE INTRODUCCIÓN */
+
+#intro-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.92);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+#intro-card {
+    background: #111;
+    border: 4px solid #ff0;
+    padding: 25px;
+    max-width: 620px;
+    color: #fff;
+    text-align: center;
+    box-shadow: 0 0 25px rgba(255, 255, 0, 0.3);
+}
+
+#intro-card h1 {
+    font-size: 14px;
+    color: #ff0;
+    margin-bottom: 12px;
+    line-height: 1.4;
+}
+
+.ml-badge {
+    display: inline-block;
+    background: #d00;
+    color: #fff;
+    font-size: 8px;
+    padding: 4px 8px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    border-radius: 3px;
+}
+
+#intro-card p {
+    font-size: 9px;
+    line-height: 1.7;
+    margin-bottom: 12px;
+    text-align: left;
+}
+
+#btn-comenzar {
+    font-family: inherit;
+    font-size: 11px;
+    padding: 12px 20px;
+    background: #28a745;
+    color: #fff;
+    border: 2px solid #fff;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+#btn-comenzar:hover {
+    background: #34ce57;
+}
+
+
+/* EFECTOS Y PODERES */
+
+.invulnerable {
+    opacity: 0.4;
+}
+
+.bloque-usado {
+    filter: grayscale(100%) brightness(30%);
+}
+
+.mario-fuego-colores {
+    filter: sepia(100%) hue-rotate(310deg) saturate(400%) contrast(150%);
+}
+
+.proyectil-mario {
+    width: 70px;
+    height: 70px;
+}
+
+.proyectil-exe {
+    width: 70px;
+    height: 70px;
+}
+
+.powerup-item {
+    width: 35px;
+    height: 35px;
+}
+
+.powerup-life {
+    filter: hue-rotate(90deg) saturate(200%);
+}
+
+
+/* MODAL DE RESULTADO */
+
+#modal-resultado {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-oculto {
+    display: none !important;
+}
+
+.contenido-modal {
+    background: #111;
+    border: 4px solid #fff;
+    padding: 30px;
+    text-align: center;
+    color: #fff;
+    max-width: 420px;
+    box-shadow: 0 0 20px #000;
+}
+
+.contenido-modal h1 {
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
+.contenido-modal p {
+    font-size: 11px;
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+.botones-modal {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.btn-modal {
+    font-family: inherit;
+    font-size: 10px;
+    padding: 10px 15px;
+    background: #28a745;
+    color: #fff;
+    border: 2px solid #fff;
+    cursor: pointer;
+}
+
+.btn-modal:hover {
+    background: #34ce57;
+}
+
+.btn-secundario {
+    background: #dc3545;
+}
+
+.btn-secundario:hover {
+    background: #bd2130;
+}

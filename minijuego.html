@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mario ML - Nivel 3 (Boss Fight Machine Learning)</title>
+    <link rel="stylesheet" href="minijuego.css">
+</head>
+
+<body id="juego-nivel3">
+
+    <!-- OVERLAY DE INTRODUCCIÓN DE MACHINE LEARNING -->
+    <div id="intro-overlay">
+        <div id="intro-card">
+            <h1>NIVEL 4: APRENDIZAJE AUTOMÁTICO (MACHINE LEARNING)</h1>
+            <div class="ml-badge">IA EN TIEMPO REAL</div>
+
+            <p><strong>¿Y si los personajes de Mario usaran IA?</strong></p>
+            <p>Enfréntate a <strong>Mario.EXE</strong>, un enemigo con Machine Learning que aprenderá cómo atacas para contraatacarte.</p>
+            <p>¡Gánale antes de que aprenda todos tus trucos!</p>
+
+            <button id="btn-comenzar" onclick="iniciarCombate()">¡COMENZAR EL JUEGO!</button>
+        </div>
+    </div>
+
+    <!-- CONTENEDOR PRINCIPAL DEL JUEGO -->
+    <div id="juego">
+        <!-- HUD / BARRA DE VIDA Y PODER -->
+        <div id="hud">
+            <div class="hud-mario">
+                <div id="vidas-mario">VIDAS: ❤️❤️❤️</div>
+                <div id="poder-mario">PODER: NORMAL</div>
+            </div>
+            <div class="hud-boss">
+                <div>MARIO.EXE</div>
+                <div class="barra-hp-container">
+                    <div id="barra-hp-exe"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PANEL DE CONTROLES VISIBLE -->
+        <div id="panel-controles">
+            <div class="titulo-controles">CONTROLES</div>
+            <div class="tecla-item"><span class="tecla">A/D</span> o <span class="tecla">←/→</span> Moverse</div>
+            <div class="tecla-item"><span class="tecla">W</span> o <span class="tecla">↑</span> Saltar</div>
+            <div class="tecla-item"><span class="tecla">X</span> o <span class="tecla">ESPACIO</span> Disparar Fuego</div>
+            <div class="tecla-item"><span class="tecla">ENTER</span> Menú Principal</div>
+        </div>
+
+        <!-- ESCENARIO CON IMAGEN DE FONDO -->
+        <div id="escenario">
+            <div id="mundo" style="background-image: url('img/Frame 139.png');">
+
+                <!-- Tubería de entrada / salida -->
+                <div id="tubo-salida" class="cañeria-entrada" style="left: 450px; bottom: 50px; width: 80px; height: 160px;">
+                    <img src="img/tuberia.png" alt="Tubería" style="width: 100%; height: 100%;">
+                </div>
+
+                <!-- Tuberías de obstáculos -->
+                <div class="tuberia" style="left: 1300px; bottom: 50px; width: 80px; height: 160px;">
+                    <img src="img/tuberia.png" alt="Tubería" style="width: 100%; height: 100%;">
+                </div>
+
+                <div class="tuberia" style="left: 2100px; bottom: 50px; width: 80px; height: 160px;">
+                    <img src="img/tuberia.png" alt="Tubería" style="width: 100%; height: 100%;">
+                </div>
+
+                <!-- Estructura de Bloques normales y Bloques ? -->
+                <div class="bloque" style="left: 900px; bottom: 190px; width: 50px; height: 50px;">
+                    <img src="img/bloque.jpg" alt="Bloque Ladrillo" style="width: 100%; height: 100%;">
+                </div>
+                <div class="bloque-amarillo" data-item="random" style="left: 950px; bottom: 190px; width: 50px; height: 50px;">
+                    <img src="img/bloquedepregunta.jpg" alt="Bloque ?" style="width: 100%; height: 100%;">
+                </div>
+                <div class="bloque" style="left: 1000px; bottom: 190px; width: 50px; height: 50px;">
+                    <img src="img/bloque.jpg" alt="Bloque Ladrillo" style="width: 100%; height: 100%;">
+                </div>
+
+                <!-- Más bloques -->
+                <div class="bloque" style="left: 1700px; bottom: 210px; width: 50px; height: 50px;">
+                    <img src="img/bloque.jpg" alt="Bloque Ladrillo" style="width: 100%; height: 100%;">
+                </div>
+                <div class="bloque-amarillo" data-item="random" style="left: 1750px; bottom: 210px; width: 50px; height: 50px;">
+                    <img src="img/bloquedepregunta.jpg" alt="Bloque ?" style="width: 100%; height: 100%;">
+                </div>
+                <div class="bloque" style="left: 1800px; bottom: 210px; width: 50px; height: 50px;">
+                    <img src="img/bloque.jpg" alt="Bloque Ladrillo" style="width: 100%; height: 100%;">
+                </div>
+
+                <!-- PISO CONSTRUIDO CON BLOQUES -->
+                <div id="piso-bloques"></div>
+
+                <!-- CAPA PARA DISPAROS Y PODERES -->
+                <div id="capa-proyectiles"></div>
+
+                <!-- PERSONAJE PRINCIPAL: MARIO -->
+                <div id="mario" style="left: 171px; bottom: 50px;">
+                    <img id="img-mario" src="img/marionormal.png" alt="Mario">
+                </div>
+
+                <!-- PERSONAJE ENEMIGO: MARIO.EXE -->
+                <div id="mario-exe" style="left: 800px; bottom: 50px;">
+                    <img id="img-mario-exe" src="img/marioexe.png" alt="Mario EXE">
+                </div>
+
+            </div>
+        </div>
+
+        <!-- MODAL DE RESULTADO -->
+        <div id="modal-resultado" class="modal-oculto">
+            <div class="contenido-modal">
+                <h1 id="titulo-modal">¡GANASTE!</h1>
+                <p id="mensaje-modal">Has derrotado a Mario.EXE</p>
+                <div id="mensaje-agradecimiento" style="color: #ff0; font-size: 10px; margin-bottom: 20px; font-weight: bold;">
+                    "Gracias por jugar, espero que hayas aprendido algo"
+                </div>
+                <div class="botones-modal">
+                    <button onclick="reiniciarNivel()" class="btn-modal">Volver a Jugar</button>
+                    <button onclick="salirAlMenu()" class="btn-modal btn-secundario">Menú Principal</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="minijuego.js"></script>
+</body>
+
+</html>
