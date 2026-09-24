@@ -4,11 +4,8 @@ const escenario = document.getElementById('escenario');
 const cartel1 = document.getElementById('cartel-ml');
 const cartel2 = document.getElementById('cartel-ml2');
 const cartel3 = document.getElementById('cartel-ml3');
-const cartel4 = document.getElementById('cartel-ml4');
-const cartel5 = document.getElementById('cartel-ml5');
-const cartel6 = document.getElementById('cartel-ml6');
+
 const tituloInicial = document.getElementById('titulo-inicial');
-const cartel7 = document.getElementById('cartel7');
 
 const tuberia = document.getElementById('tuberia');
 
