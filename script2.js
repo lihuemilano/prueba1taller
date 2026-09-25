@@ -37,7 +37,8 @@ const tuboPlantaBottom = 50;
 const tuboPlantaHeight = 170;
 const tuboPlantaTopY = tuboPlantaBottom + tuboPlantaHeight;
 
-let marioX = 171;
+const parametros = new URLSearchParams(window.location.search);
+let marioX = parseInt(parametros.get('marioX')) || 171;
 let marioY = 230;
 
 let velocidadY = 0;
