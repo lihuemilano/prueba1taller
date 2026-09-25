@@ -3,11 +3,14 @@ const escenario = document.getElementById('escenario');
 const tuberiaJuego1 = document.getElementById('tuberia-juego1');
 const tuberiaJuego2 = document.getElementById('tuberia-juego2');
 let entrandoJuego = false;
-let tuberiasJuegosActivas = false;
+let tuberiasJuegosActivas = sessionStorage.getItem('tuberiasActivas') === 'true';
 
 
 const tuberiaFinal = document.getElementById('tuberia-final');
-
+if (tuberiasJuegosActivas) {
+    tuberiaJuego1.classList.add('subida');
+    tuberiaJuego2.classList.add('subida');
+}
 
 const cartelJuego1 = document.getElementById('cartel-juego1');
 const cartelJuego2 = document.getElementById('cartel-juego2');
@@ -38,7 +41,16 @@ const tuboPlantaHeight = 170;
 const tuboPlantaTopY = tuboPlantaBottom + tuboPlantaHeight;
 
 const parametros = new URLSearchParams(window.location.search);
-let marioX = parseInt(parametros.get('marioX')) || 171;
+
+let marioX;
+
+if (sessionStorage.getItem('volverDeEjemplo') === 'true') {
+    marioX = 3230;
+    sessionStorage.removeItem('volverDeEjemplo');
+} else {
+    marioX = parseInt(parametros.get('marioX')) || 171;
+}
+
 let marioY = 230;
 
 let velocidadY = 0;
@@ -245,15 +257,17 @@ function resolverColisiones(siguienteX, siguienteY) {
                         tuberiaJuego2.classList.add('subida');
                     }
                     tuberiasJuegosActivas = true;
-                    setTimeout(() => {
-                        if (cartelJuego1) {
-                            cartelJuego1.classList.remove('oculto');
-                        }
+sessionStorage.setItem('tuberiasActivas', 'true');
 
-                        if (cartelJuego2) {
-                            cartelJuego2.classList.remove('oculto');
-                        }
-                    }, 1000);
+setTimeout(() => {
+    if (cartelJuego1) {
+        cartelJuego1.classList.remove('oculto');
+    }
+
+    if (cartelJuego2) {
+        cartelJuego2.classList.remove('oculto');
+    }
+}, 1000);
 
                 }, 500);
             }
@@ -627,6 +641,9 @@ function entrarEnTuberiaJuego(pagina) {
     entrandoJuego = true;
     controlesBloqueados = true;
 
+sessionStorage.setItem('tuberiasActivas', 'true');
+    sessionStorage.setItem('volverDeEjemplo', 'true');
+    
     marioX = marioX;
     mario.style.left = marioX + 'px';
 
