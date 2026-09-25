@@ -617,7 +617,8 @@ function comprobarEntradaTubosJuegos() {
             marioCentro <= tuboX + tuboAncho + 120 &&
             Math.abs(marioY - 230) < 100
         ) {
-            entrarEnTuberiaJuego('indexcreatures.html');
+            sessionStorage.setItem('tuberiasActivas', 'true');
+window.location.href = 'indexcreatures.html';
             return;
         }
     }
@@ -631,8 +632,8 @@ function comprobarEntradaTubosJuegos() {
             marioCentro <= tuboX + tuboAncho + 120 &&
             Math.abs(marioY - 230) < 100
         ) {
-            entrarEnTuberiaJuego('indexfifa.html');
-            return;
+            sessionStorage.setItem('tuberiasActivas', 'true');
+window.location.href = 'indexfifa.html';
         }
     }
 }
