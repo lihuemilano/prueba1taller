@@ -24,27 +24,51 @@ const velocidadX = 7;
 const gravedad = 0.8;
 const fuerzaSalto = 17;
 
-const teclas = {
-    w: false,
-    a: false,
-    s: false,
-    d: false
-};
+// Variables de dirección exclusivas
+let moverIzquierda = false;
+let moverDerecha = false;
+let saltar = false;
 
+// Detección por nombre de tecla, código físico y código numérico (37, 38, 39)
 window.addEventListener('keydown', (e) => {
-    const tecla = e.key.toLowerCase();
+    const key = e.key;
+    const code = e.code;
+    const keyCode = e.keyCode || e.which;
 
-    if (teclas.hasOwnProperty(tecla)) {
-        teclas[tecla] = true;
+    if (key === 'ArrowLeft' || code === 'ArrowLeft' || key === 'Left' || keyCode === 37) {
+        moverIzquierda = true;
+        e.preventDefault();
+    }
+    if (key === 'ArrowRight' || code === 'ArrowRight' || key === 'Right' || keyCode === 39) {
+        moverDerecha = true;
+        e.preventDefault();
+    }
+    if (key === 'ArrowUp' || code === 'ArrowUp' || key === 'Up' || keyCode === 38) {
+        saltar = true;
+        e.preventDefault();
     }
 });
 
 window.addEventListener('keyup', (e) => {
-    const tecla = e.key.toLowerCase();
+    const key = e.key;
+    const code = e.code;
+    const keyCode = e.keyCode || e.which;
 
-    if (teclas.hasOwnProperty(tecla)) {
-        teclas[tecla] = false;
+    if (key === 'ArrowLeft' || code === 'ArrowLeft' || key === 'Left' || keyCode === 37) {
+        moverIzquierda = false;
     }
+    if (key === 'ArrowRight' || code === 'ArrowRight' || key === 'Right' || keyCode === 39) {
+        moverDerecha = false;
+    }
+    if (key === 'ArrowUp' || code === 'ArrowUp' || key === 'Up' || keyCode === 38) {
+        saltar = false;
+    }
+});
+
+window.addEventListener('blur', () => {
+    moverIzquierda = false;
+    moverDerecha = false;
+    saltar = false;
 });
 
 function actualizarCamara() {
@@ -247,9 +271,9 @@ function entrarAlCastillo() {
 
     entrandoAlCastillo = true;
 
-    teclas.a = false;
-    teclas.d = false;
-    teclas.w = false;
+    moverIzquierda = false;
+    moverDerecha = false;
+    saltar = false;
 
     mario.className = '';
     mario.classList.add('mario-saludando');
@@ -270,13 +294,13 @@ function actualizar() {
     let moviendose = false;
 
     if (!entrandoAlCastillo) {
-        if (teclas.a) {
+        if (moverIzquierda) {
             nuevoX -= velocidadX;
             direccion = -1;
             moviendose = true;
         }
 
-        if (teclas.d) {
+        if (moverDerecha) {
             nuevoX += velocidadX;
             direccion = 1;
             moviendose = true;
@@ -293,7 +317,7 @@ function actualizar() {
         nuevoX = ANCHO_MUNDO - anchoMario;
     }
 
-    if (teclas.w && enElSuelo && !entrandoAlCastillo) {
+    if (saltar && enElSuelo && !entrandoAlCastillo) {
         velocidadY = fuerzaSalto;
         enElSuelo = false;
     }
