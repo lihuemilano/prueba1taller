@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Bungee&family=Michroma&display=swap');
+
 body {
     margin: 0;
     padding: 0;
@@ -81,26 +82,14 @@ body {
     z-index: 999;
 }
 
-.contenido-cartel video {
-    width: 220px;
-    height: 140px;
-    object-fit: cover;
-    border: 3px solid #ffffff;
-    display: block;
-}
-
 #mario.entrando-castillo {
     animation: desaparecerMario 1.2s ease-in forwards;
     z-index: 1000;
 }
 
 @keyframes desaparecerMario {
-    0% {
-        opacity: 1;
-    }
-    100% {
-        opacity: 0;
-    }
+    0% { opacity: 1; }
+    100% { opacity: 0; }
 }
 
 .bloque {
@@ -122,10 +111,33 @@ body {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
+    box-sizing: border-box;
+    transition: bottom 0.1s ease, filter 0.1s ease;
+}
+
+/* Efecto de impacto al golpear */
+.bloque-amarillo.golpeado {
+    animation: impactoBloque 0.25s ease-in-out;
+}
+
+@keyframes impactoBloque {
+    0% { filter: brightness(1.8) contrast(1.2); }
+    50% { filter: brightness(2) contrast(1.5); }
+    100% { filter: brightness(1); }
+}
+
+/* Estado de grieta al primer golpe */
+.bloque-amarillo.agrietado {
+    border: 3px dashed #ff2200 !important;
+    box-shadow: 0 0 10px #ff2200;
+    filter: contrast(1.5) sepia(0.3);
 }
 
 .bloque-amarillo.usado {
     background-image: url('https://i.pinimg.com/736x/83/1c/76/831c76160f5f7f8332c5d16bfaee8db6.jpg');
+    filter: grayscale(1);
+    border: none !important;
+    box-shadow: none !important;
 }
 
 #juego-nivel2 {
@@ -151,54 +163,6 @@ body {
     display: none !important;
 }
 
-#cartel-ml {
-    position: absolute;
-    left: 800px;
-    bottom: 290px;
-    transform: translateX(-25%);
-    z-index: 100;
-}
-
-#cartel-ml2 {
-    position: absolute;
-    left: 1550px;
-    bottom: 350px;
-    transform: translateX(-35%);
-    z-index: 100;
-}
-
-#cartel-ml3 {
-    position: absolute;
-    left: 1600px;
-    bottom: 350px;
-    transform: translateX(-35%);
-    z-index: 100;
-}
-
-#cartel-ml4 {
-    position: absolute;
-    left: 2050px;
-    bottom: 350px;
-    transform: translateX(-35%);
-    z-index: 100;
-}
-
-#cartel-ml5 {
-    position: absolute;
-    left: 2200px;
-    bottom: 350px;
-    transform: translateX(-35%);
-    z-index: 100;
-}
-
-#cartel-ml6 {
-    position: absolute;
-    left: 2200px;
-    bottom: 350px;
-    transform: translateX(-35%);
-    z-index: 100;
-}
-
 #titulo-inicial {
     position: absolute;
     left: 170px;
@@ -217,60 +181,96 @@ body {
     white-space: nowrap;
 }
 
+#cartel-ml {
+    position: absolute;
+    left: 680px;
+    bottom: 250px;
+    z-index: 100;
+}
+
+#cartel-ml2 {
+    position: absolute;
+    left: 1420px;
+    bottom: 310px;
+    z-index: 100;
+}
+
+/* Carteles compactos con padding reducido en laterales */
 #cartel-ml,
-#cartel-ml2,
-#cartel-ml3,
-#cartel-ml4,
-#cartel-ml5,
-#cartel-ml6 {
+#cartel-ml2 {
     font-family: 'Bungee', cursive;
     color: #ffffff;
-    margin: 0 0 8px 0;
-    font-size: 16px;
+    margin: 0;
+    font-size: 13px;
     text-transform: uppercase;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
     background-color: #4e4e4e;
     border: 4px solid #ffffff;
-    padding: 20px;
-    text-align: center;
-    white-space: nowrap;
+    padding: 12px 14px;
+    text-align: left;
+    width: fit-content;
+    max-width: 720px;
 }
 
+/* Disposición horizontal compacta */
 .contenido-cartel {
     display: flex;
+    flex-direction: row;
     align-items: center;
-    justify-content: center;
-    gap: 25px;
+    justify-content: space-between;
+    gap: 16px;
 }
 
 .texto-cartel {
-    text-align: center;
+    flex: 1;
+    text-align: left;
 }
 
-.contenido-cartel img {
-    width: 220px;
-    height: 140px;
-    object-fit: cover;
+.texto-cartel h2 {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.4;
+    letter-spacing: 0.5px;
+}
+
+.texto-cartel p {
+    margin: 8px 0 0 0;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+/* Imágenes y videos adaptables */
+.contenido-cartel img,
+.contenido-cartel video {
+    width: 100%;
+    max-width: 420px;
+    height: auto;
     border: 3px solid #ffffff;
     image-rendering: pixelated;
+    display: block;
+    flex-shrink: 0;
 }
 
-.contenido-cartel h2 {
+/* Golpe 2 Bloque 1: Mayor padding alrededor de la imagen y sin borde */
+#ml1-contenido2 {
+    padding: 12px 10px;
+}
+
+#ml1-contenido2 img {
+    border: none !important;
+    transform: scale(1.02);
     margin: 0;
 }
 
-.bloque-amarillo {
-    width: 50px;
-    height: 50px;
-    position: absolute;
-    background-image: url('https://i.pinimg.com/236x/77/e9/43/77e9438bb5fa840004b0de9d6635601c.jpg');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
+/* Reducir el tamaño de la imagen en el Golpe 1 del Bloque 2 */
+#ml2-contenido1 img {
+    max-width: 280px;
+    height: auto;
 }
 
-.bloque-amarillo.usado {
-    filter: grayscale(1);
+/* Hacer la caja del Golpe 2 del Bloque 2 más angosta */
+#ml2-contenido2 {
+    max-width: 460px;
 }
 
 .tuberia {
@@ -279,25 +279,6 @@ body {
     background-size: 100% 100%;
     background-repeat: no-repeat;
     z-index: 10;
-}
-
-#cartel7 {
-    position: absolute;
-    left: 2250px;
-    bottom: 350px;
-    transform: translateX(-35%);
-    z-index: 100;
-    font-family: 'Bungee', cursive;
-    color: #ffffff;
-    font-size: 18px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
-    background-color: #4e4e4e;
-    border: 4px solid #ffffff;
-    padding: 20px;
-    text-align: center;
-    white-space: nowrap;
 }
 
 #bandera {

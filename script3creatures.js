@@ -24,27 +24,41 @@ const velocidadX = 7;
 const gravedad = 0.8;
 const fuerzaSalto = 17;
 
-const teclas = {
-    w: false,
-    a: false,
-    s: false,
-    d: false
-};
+// Estados independientes para cada dirección
+let flechaIzquierda = false;
+let flechaDerecha = false;
+let flechaArriba = false;
 
+// Captura de eventos para las flechas
 window.addEventListener('keydown', (e) => {
-    const tecla = e.key.toLowerCase();
-
-    if (teclas.hasOwnProperty(tecla)) {
-        teclas[tecla] = true;
+    const k = e.key;
+    if (k === 'ArrowLeft' || k === 'Left') {
+        flechaIzquierda = true;
+        e.preventDefault();
+    } else if (k === 'ArrowRight' || k === 'Right') {
+        flechaDerecha = true;
+        e.preventDefault();
+    } else if (k === 'ArrowUp' || k === 'Up') {
+        flechaArriba = true;
+        e.preventDefault();
     }
 });
 
 window.addEventListener('keyup', (e) => {
-    const tecla = e.key.toLowerCase();
-
-    if (teclas.hasOwnProperty(tecla)) {
-        teclas[tecla] = false;
+    const k = e.key;
+    if (k === 'ArrowLeft' || k === 'Left') {
+        flechaIzquierda = false;
+    } else if (k === 'ArrowRight' || k === 'Right') {
+        flechaDerecha = false;
+    } else if (k === 'ArrowUp' || k === 'Up') {
+        flechaArriba = false;
     }
+});
+
+window.addEventListener('blur', () => {
+    flechaIzquierda = false;
+    flechaDerecha = false;
+    flechaArriba = false;
 });
 
 function actualizarCamara() {
@@ -148,6 +162,21 @@ function activarBloque2() {
     }
 }
 
+// Animación genérica de impacto visual
+function animarImpactoBloque(elem) {
+    elem.classList.remove('golpeado');
+    void elem.offsetWidth; // Forzar reflow
+    elem.classList.add('golpeado');
+
+    // Salto físico del bloque en píxeles
+    const bottomBase = parseInt(elem.style.bottom) || 190;
+    elem.style.bottom = (bottomBase + 18) + 'px';
+
+    setTimeout(() => {
+        elem.style.bottom = bottomBase + 'px';
+    }, 120);
+}
+
 function resolverColisiones(siguienteX, siguienteY) {
     const obstaculos = document.querySelectorAll('.obstaculo');
 
@@ -214,23 +243,31 @@ function resolverColisiones(siguienteX, siguienteY) {
             velocidadY = 0;
 
             if (elem.id === 'bloque-mensaje-ml') {
+                animarImpactoBloque(elem);
+
                 if (golpesBloque1 === 0) {
                     golpesBloque1 = 1;
                     activarBloque1();
+                    elem.classList.add('agrietado');
                 } else if (golpesBloque1 === 1) {
                     golpesBloque1 = 2;
                     activarBloque1();
+                    elem.classList.remove('agrietado');
                     elem.classList.add('usado');
                 }
             }
 
             if (elem.id === 'bloque-mensaje-ml2') {
+                animarImpactoBloque(elem);
+
                 if (golpesBloque2 === 0) {
                     golpesBloque2 = 1;
                     activarBloque2();
+                    elem.classList.add('agrietado');
                 } else if (golpesBloque2 === 1) {
                     golpesBloque2 = 2;
                     activarBloque2();
+                    elem.classList.remove('agrietado');
                     elem.classList.add('usado');
                 }
             }
@@ -247,9 +284,9 @@ function entrarAlCastillo() {
 
     entrandoAlCastillo = true;
 
-    teclas.a = false;
-    teclas.d = false;
-    teclas.w = false;
+    flechaIzquierda = false;
+    flechaDerecha = false;
+    flechaArriba = false;
 
     mario.className = '';
     mario.classList.add('mario-saludando');
@@ -270,13 +307,13 @@ function actualizar() {
     let moviendose = false;
 
     if (!entrandoAlCastillo) {
-        if (teclas.a) {
+        if (flechaIzquierda) {
             nuevoX -= velocidadX;
             direccion = -1;
             moviendose = true;
         }
 
-        if (teclas.d) {
+        if (flechaDerecha) {
             nuevoX += velocidadX;
             direccion = 1;
             moviendose = true;
@@ -293,7 +330,7 @@ function actualizar() {
         nuevoX = ANCHO_MUNDO - anchoMario;
     }
 
-    if (teclas.w && enElSuelo && !entrandoAlCastillo) {
+    if (flechaArriba && enElSuelo && !entrandoAlCastillo) {
         velocidadY = fuerzaSalto;
         enElSuelo = false;
     }
