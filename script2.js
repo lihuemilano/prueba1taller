@@ -141,6 +141,48 @@ if (planta1) {
     setTimeout(cicloPlanta1, 1200);
 }
 
+function comprobarPlanta1() {
+    if (marioMuerto || !planta1Arriba) return;
+
+    const planta1X = 705;
+    const planta1Width = 80;
+    const planta1Y = parseFloat(planta1.style.bottom) || 10;
+    const planta1Height = 120;
+
+    const marioWidth = 48;
+    const marioHeight = 60;
+
+    const colisionX = marioX + marioWidth > planta1X && marioX < planta1X + planta1Width;
+    const colisionY = marioY + marioHeight > planta1Y && marioY < planta1Y + planta1Height;
+
+    if (colisionX && colisionY) {
+        ejecutarMuertePlanta1();
+    }
+}
+
+function ejecutarMuertePlanta1() {
+    if (marioMuerto) return;
+
+    marioMuerto = true;
+    marioEsFantasma = true;
+    controlesBloqueados = true;
+
+    mario.style.zIndex = '20';
+
+    mario.className = '';
+    mario.classList.add('mario-fantasma');
+
+    mario.style.opacity = '1';
+
+    ocultarTodosLosCarteles();
+
+    velocidadY = 12;
+
+    setTimeout(() => {
+        window.location.reload();
+    }, 2000);
+}
+
 function resolverColisiones(siguienteX, siguienteY) {
     const obstaculos = document.querySelectorAll('.obstaculo');
 
@@ -257,17 +299,17 @@ function resolverColisiones(siguienteX, siguienteY) {
                         tuberiaJuego2.classList.add('subida');
                     }
                     tuberiasJuegosActivas = true;
-sessionStorage.setItem('tuberiasActivas', 'true');
+                    sessionStorage.setItem('tuberiasActivas', 'true');
 
-setTimeout(() => {
-    if (cartelJuego1) {
-        cartelJuego1.classList.remove('oculto');
-    }
+                    setTimeout(() => {
+                        if (cartelJuego1) {
+                            cartelJuego1.classList.remove('oculto');
+                        }
 
-    if (cartelJuego2) {
-        cartelJuego2.classList.remove('oculto');
-    }
-}, 1000);
+                        if (cartelJuego2) {
+                            cartelJuego2.classList.remove('oculto');
+                        }
+                    }, 1000);
 
                 }, 500);
             }
@@ -618,7 +660,7 @@ function comprobarEntradaTubosJuegos() {
             Math.abs(marioY - 230) < 100
         ) {
             sessionStorage.setItem('tuberiasActivas', 'true');
-window.location.href = 'indexcreatures.html';
+            window.location.href = 'indexcreatures.html';
             return;
         }
     }
@@ -633,7 +675,7 @@ window.location.href = 'indexcreatures.html';
             Math.abs(marioY - 230) < 100
         ) {
             sessionStorage.setItem('tuberiasActivas', 'true');
-window.location.href = 'indexfifa.html';
+            window.location.href = 'indexfifa.html';
         }
     }
 }
@@ -642,7 +684,7 @@ function entrarEnTuberiaJuego(pagina) {
     entrandoJuego = true;
     controlesBloqueados = true;
 
-sessionStorage.setItem('tuberiasActivas', 'true');
+    sessionStorage.setItem('tuberiasActivas', 'true');
     sessionStorage.setItem('volverDeEjemplo', 'true');
     
     marioX = marioX;
@@ -872,6 +914,7 @@ function actualizar() {
             enElSuelo = false;
         }
 
+        comprobarPlanta1();
         comprobarPlanta2SobreTubo();
         comprobarContactoMoneda();
         comprobarEntradaTubo();
