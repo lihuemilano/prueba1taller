@@ -296,7 +296,7 @@ function entrarAlCastillo() {
         mario.classList.add('entrando-castillo');
 
         setTimeout(() => {
-            window.location.href = 'nivel3A.html';
+            window.location.href = 'nivel2.html';
         }, 1700);
 
     }, 1200);
