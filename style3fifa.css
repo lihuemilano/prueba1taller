@@ -214,10 +214,7 @@ body {
     max-height: 500px ;
 }
 
-.video .video {
-    height: 400px ;
-    width: 500px ;
-}
+
 
 /* Disposición horizontal compacta */
 .contenido-cartel {
@@ -260,12 +257,12 @@ body {
 
 /* Golpe 2 Bloque 1 */
 #ml1-contenido2 {
-    padding: 12px 10px;
+    padding: 10px 10px;
 }
 
 #ml1-contenido2 video {
     border: 3px solid #ffffff;
-    height: 200px ;
+    height: 180px ;
 }
 
 /* Golpe 1 Bloque 2: Imagen más grande */
