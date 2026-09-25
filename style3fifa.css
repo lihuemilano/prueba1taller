@@ -186,6 +186,7 @@ body {
     left: 680px;
     bottom: 250px;
     z-index: 100;
+    max-width: 450px ;
 }
 
 #cartel-ml2 {
