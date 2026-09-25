@@ -244,7 +244,7 @@ body {
 .contenido-cartel video {
     width: 100%;
     max-width: 420px;
-    height: 80%;
+    height: 50%;
     border: 3px solid #ffffff;
     image-rendering: pixelated;
     display: block;
