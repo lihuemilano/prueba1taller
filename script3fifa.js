@@ -16,8 +16,11 @@ let enElSuelo = false;
 let direccion = 1;
 let camaraX = 0;
 
-let golpesBloque1 = 0;
-let golpesBloque2 = 0;
+let golpesBloque1 =
+    Number(sessionStorage.getItem('golpesBloque1')) || 0;
+
+let golpesBloque2 =
+    Number(sessionStorage.getItem('golpesBloque2')) || 0;
 let entrandoAlCastillo = false;
 
 const velocidadX = 7;
@@ -172,6 +175,40 @@ function activarBloque2() {
     }
 }
 
+function restaurarCarteles() {
+    ocultarTodosLosCarteles();
+
+    if (golpesBloque1 > 0 && cartel1) {
+        cartel1.classList.remove('oculto');
+
+        const contenido1 = document.getElementById('ml1-contenido1');
+        const contenido2 = document.getElementById('ml1-contenido2');
+
+        if (contenido1) {
+            contenido1.classList.toggle('oculto', golpesBloque1 !== 1);
+        }
+
+        if (contenido2) {
+            contenido2.classList.toggle('oculto', golpesBloque1 !== 2);
+        }
+    }
+
+    if (golpesBloque2 > 0 && cartel2) {
+        cartel2.classList.remove('oculto');
+
+        const contenido1 = document.getElementById('ml2-contenido1');
+        const contenido2 = document.getElementById('ml2-contenido2');
+
+        if (contenido1) {
+            contenido1.classList.toggle('oculto', golpesBloque2 !== 1);
+        }
+
+        if (contenido2) {
+            contenido2.classList.toggle('oculto', golpesBloque2 !== 2);
+        }
+    }
+}
+
 function resolverColisiones(siguienteX, siguienteY) {
     const obstaculos = document.querySelectorAll('.obstaculo');
 
@@ -288,8 +325,7 @@ function entrarAlCastillo() {
 
     window.location.href = 'nivel3A.html';
 }, 1700);
-activarBloque1();
-activarBloque2();
+
     }, 1200);
 }
 
