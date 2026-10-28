@@ -10,13 +10,25 @@ const nivelSuelo = 50;
 
 // Si venimos del castillo, recuperar la posición guardada.
 // Si no hay una posición guardada, usar la posición inicial habitual.
-let marioX = sessionStorage.getItem('marioX') !== null
-    ? Number(sessionStorage.getItem('marioX'))
-    : 171;
 
-let marioY = sessionStorage.getItem('marioY') !== null
-    ? Number(sessionStorage.getItem('marioY'))
-    : 230;
+
+let marioX;
+let marioY;
+
+if (sessionStorage.getItem('volverDeEjemplo') === 'true') {
+    marioX = 150;
+    marioY = 230;
+    sessionStorage.removeItem('volverDeEjemplo');
+} else {
+    marioX = sessionStorage.getItem('marioX') !== null ?
+        Number(sessionStorage.getItem('marioX')) :
+        171;
+
+    marioY = sessionStorage.getItem('marioY') !== null ?
+        Number(sessionStorage.getItem('marioY')) :
+        230;
+}
+
 
 let velocidadY = 0;
 let enElSuelo = false;
@@ -337,15 +349,18 @@ function entrarAlCastillo() {
         mario.classList.add('entrando-castillo');
 
         setTimeout(() => {
-    sessionStorage.setItem('golpesBloque1', golpesBloque1);
-    sessionStorage.setItem('golpesBloque2', golpesBloque2);
-            sessionStorage.setItem('marioX', 1500);
-    sessionStorage.setItem('marioY', 50);
+            sessionStorage.setItem('golpesBloque1', golpesBloque1);
+            sessionStorage.setItem('golpesBloque2', golpesBloque2);
+            sessionStorage.setItem('golpesBloque1', golpesBloque1);
+            sessionStorage.setItem('golpesBloque2', golpesBloque2);
+            sessionStorage.setItem('marioX', 3250);
+            sessionStorage.setItem('marioY', 50);
 
-    window.location.href = 'nivel2.html';
-}, 1700);
-activarBloque1();
-activarBloque2();
+            sessionStorage.removeItem('volverDeEjemplo');
+            window.location.href = 'nivel2.html';
+        }, 1700);
+        activarBloque1();
+        activarBloque2();
     }, 1200);
 }
 
@@ -447,11 +462,11 @@ mario.style.bottom = marioY + 'px';
 mario.style.transform =
     'scaleX(1.2) scaleY(1.2)';
 
+restaurarCarteles();
+
 if (tituloInicial) {
     tituloInicial.classList.remove('oculto');
 }
 
-restaurarCarteles();
 actualizarCamara();
-
 actualizar();
