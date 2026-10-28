@@ -51,7 +51,14 @@ if (sessionStorage.getItem('volverDeEjemplo') === 'true') {
     marioX = parseInt(parametros.get('marioX')) || 171;
 }
 
-let marioY = 230;
+let marioX = sessionStorage.getItem('marioX') !== null
+    ? Number(sessionStorage.getItem('marioX'))
+    : 171;
+
+let marioY = sessionStorage.getItem('marioY') !== null
+    ? Number(sessionStorage.getItem('marioY'))
+    : 230;
+
 
 let velocidadY = 0;
 let enElSuelo = false;
