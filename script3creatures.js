@@ -162,6 +162,40 @@ function activarBloque2() {
     }
 }
 
+function restaurarCarteles() {
+    ocultarTodosLosCarteles();
+
+    if (golpesBloque1 > 0 && cartel1) {
+        cartel1.classList.remove('oculto');
+
+        const contenido1 = document.getElementById('ml1-contenido1');
+        const contenido2 = document.getElementById('ml1-contenido2');
+
+        if (contenido1) {
+            contenido1.classList.toggle('oculto', golpesBloque1 !== 1);
+        }
+
+        if (contenido2) {
+            contenido2.classList.toggle('oculto', golpesBloque1 !== 2);
+        }
+    }
+
+    if (golpesBloque2 > 0 && cartel2) {
+        cartel2.classList.remove('oculto');
+
+        const contenido1 = document.getElementById('ml2-contenido1');
+        const contenido2 = document.getElementById('ml2-contenido2');
+
+        if (contenido1) {
+            contenido1.classList.toggle('oculto', golpesBloque2 !== 1);
+        }
+
+        if (contenido2) {
+            contenido2.classList.toggle('oculto', golpesBloque2 !== 2);
+        }
+    }
+}
+
 // Animación genérica de impacto visual
 function animarImpactoBloque(elem) {
     elem.classList.remove('golpeado');
@@ -306,8 +340,7 @@ activarBloque2();
     }, 1200);
 }
 
-activarBloque1();
-activarBloque2();
+
 
 function actualizar() {
     let nuevoX = marioX;
