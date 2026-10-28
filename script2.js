@@ -42,18 +42,18 @@ const tuboPlantaTopY = tuboPlantaBottom + tuboPlantaHeight;
 
 const parametros = new URLSearchParams(window.location.search);
 
+const parametros = new URLSearchParams(window.location.search);
+
 let marioX;
 
 if (sessionStorage.getItem('volverDeEjemplo') === 'true') {
     marioX = 3230;
     sessionStorage.removeItem('volverDeEjemplo');
+} else if (sessionStorage.getItem('marioX') !== null) {
+    marioX = Number(sessionStorage.getItem('marioX'));
 } else {
-    marioX = parseInt(parametros.get('marioX')) || 171;
+    marioX = Number(parametros.get('marioX')) || 171;
 }
-
-let marioX = sessionStorage.getItem('marioX') !== null
-    ? Number(sessionStorage.getItem('marioX'))
-    : 171;
 
 let marioY = sessionStorage.getItem('marioY') !== null
     ? Number(sessionStorage.getItem('marioY'))
