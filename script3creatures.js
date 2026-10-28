@@ -301,7 +301,8 @@ function entrarAlCastillo() {
 
     window.location.href = 'nivel3A.html';
 }, 1700);
-
+activarBloque1();
+activarBloque2();
     }, 1200);
 }
 
