@@ -431,4 +431,8 @@ mario.style.bottom = marioY + 'px';
 mario.style.transform =
     'scaleX(1.2) scaleY(1.2)';
 
+if (tituloInicial) {
+    tituloInicial.classList.remove('oculto');
+}
+
 actualizar();
