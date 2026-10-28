@@ -40,7 +40,7 @@ const tuboPlantaBottom = 50;
 const tuboPlantaHeight = 170;
 const tuboPlantaTopY = tuboPlantaBottom + tuboPlantaHeight;
 
-const parametros = new URLSearchParams(window.location.search);
+
 
 const parametros = new URLSearchParams(window.location.search);
 
