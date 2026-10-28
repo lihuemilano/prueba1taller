@@ -47,17 +47,17 @@ const parametros = new URLSearchParams(window.location.search);
 let marioX;
 
 if (sessionStorage.getItem('volverDeEjemplo') === 'true') {
-    marioX = 3230;
+    marioX = 20;
     sessionStorage.removeItem('volverDeEjemplo');
 } else if (sessionStorage.getItem('marioX') !== null) {
     marioX = Number(sessionStorage.getItem('marioX'));
 } else {
-    marioX = Number(parametros.get('marioX')) || 171;
+    marioX = 171;
 }
 
-let marioY = sessionStorage.getItem('marioY') !== null
-    ? Number(sessionStorage.getItem('marioY'))
-    : 230;
+let marioY = sessionStorage.getItem('marioY') !== null ?
+    Number(sessionStorage.getItem('marioY')) :
+    230;
 
 
 let velocidadY = 0;
@@ -645,6 +645,7 @@ function comprobarContactoMoneda() {
 }
 
 
+
 function comprobarEntradaTubosJuegos() {
     if (
         entrandoJuego ||
@@ -666,8 +667,7 @@ function comprobarEntradaTubosJuegos() {
             marioCentro <= tuboX + tuboAncho + 120 &&
             Math.abs(marioY - 230) < 100
         ) {
-            sessionStorage.setItem('tuberiasActivas', 'true');
-            window.location.href = 'indexcreatures.html';
+            entrarEnTuberiaJuego('indexcreatures.html');
             return;
         }
     }
@@ -681,19 +681,26 @@ function comprobarEntradaTubosJuegos() {
             marioCentro <= tuboX + tuboAncho + 120 &&
             Math.abs(marioY - 230) < 100
         ) {
-            sessionStorage.setItem('tuberiasActivas', 'true');
-            window.location.href = 'indexfifa.html';
+            entrarEnTuberiaJuego('indexfifa.html');
+            return;
         }
     }
 }
 
+
+
+
 function entrarEnTuberiaJuego(pagina) {
+
     entrandoJuego = true;
     controlesBloqueados = true;
 
+    sessionStorage.setItem('marioXAntesDelEjemplo', marioX);
+    sessionStorage.setItem('marioY', marioY);
     sessionStorage.setItem('tuberiasActivas', 'true');
     sessionStorage.setItem('volverDeEjemplo', 'true');
-    
+
+    // El resto de tu animación y navegación queda igual.
     marioX = marioX;
     mario.style.left = marioX + 'px';
 
