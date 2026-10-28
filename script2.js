@@ -3,11 +3,14 @@ const escenario = document.getElementById('escenario');
 const tuberiaJuego1 = document.getElementById('tuberia-juego1');
 const tuberiaJuego2 = document.getElementById('tuberia-juego2');
 let entrandoJuego = false;
-let tuberiasJuegosActivas = false;
+let tuberiasJuegosActivas = sessionStorage.getItem('tuberiasActivas') === 'true';
 
 
 const tuberiaFinal = document.getElementById('tuberia-final');
-
+if (tuberiasJuegosActivas) {
+    tuberiaJuego1.classList.add('subida');
+    tuberiaJuego2.classList.add('subida');
+}
 
 const cartelJuego1 = document.getElementById('cartel-juego1');
 const cartelJuego2 = document.getElementById('cartel-juego2');
@@ -37,8 +40,25 @@ const tuboPlantaBottom = 50;
 const tuboPlantaHeight = 170;
 const tuboPlantaTopY = tuboPlantaBottom + tuboPlantaHeight;
 
-let marioX = 171;
-let marioY = 230;
+
+
+const parametros = new URLSearchParams(window.location.search);
+
+let marioX;
+
+if (sessionStorage.getItem('volverDeEjemplo') === 'true') {
+    marioX = 20;
+    sessionStorage.removeItem('volverDeEjemplo');
+} else if (sessionStorage.getItem('marioX') !== null) {
+    marioX = Number(sessionStorage.getItem('marioX'));
+} else {
+    marioX = 171;
+}
+
+let marioY = sessionStorage.getItem('marioY') !== null ?
+    Number(sessionStorage.getItem('marioY')) :
+    230;
+
 
 let velocidadY = 0;
 let enElSuelo = false;
@@ -126,6 +146,48 @@ function cicloPlanta1() {
 if (planta1) {
     planta1.style.bottom = '30px';
     setTimeout(cicloPlanta1, 1200);
+}
+
+function comprobarPlanta1() {
+    if (marioMuerto || !planta1Arriba) return;
+
+    const planta1X = 705;
+    const planta1Width = 80;
+    const planta1Y = parseFloat(planta1.style.bottom) || 10;
+    const planta1Height = 120;
+
+    const marioWidth = 48;
+    const marioHeight = 60;
+
+    const colisionX = marioX + marioWidth > planta1X && marioX < planta1X + planta1Width;
+    const colisionY = marioY + marioHeight > planta1Y && marioY < planta1Y + planta1Height;
+
+    if (colisionX && colisionY) {
+        ejecutarMuertePlanta1();
+    }
+}
+
+function ejecutarMuertePlanta1() {
+    if (marioMuerto) return;
+
+    marioMuerto = true;
+    marioEsFantasma = true;
+    controlesBloqueados = true;
+
+    mario.style.zIndex = '20';
+
+    mario.className = '';
+    mario.classList.add('mario-fantasma');
+
+    mario.style.opacity = '1';
+
+    ocultarTodosLosCarteles();
+
+    velocidadY = 12;
+
+    setTimeout(() => {
+        window.location.reload();
+    }, 2000);
 }
 
 function resolverColisiones(siguienteX, siguienteY) {
@@ -244,6 +306,8 @@ function resolverColisiones(siguienteX, siguienteY) {
                         tuberiaJuego2.classList.add('subida');
                     }
                     tuberiasJuegosActivas = true;
+                    sessionStorage.setItem('tuberiasActivas', 'true');
+
                     setTimeout(() => {
                         if (cartelJuego1) {
                             cartelJuego1.classList.remove('oculto');
@@ -581,6 +645,7 @@ function comprobarContactoMoneda() {
 }
 
 
+
 function comprobarEntradaTubosJuegos() {
     if (
         entrandoJuego ||
@@ -622,10 +687,20 @@ function comprobarEntradaTubosJuegos() {
     }
 }
 
+
+
+
 function entrarEnTuberiaJuego(pagina) {
+
     entrandoJuego = true;
     controlesBloqueados = true;
 
+    sessionStorage.setItem('marioXAntesDelEjemplo', marioX);
+    sessionStorage.setItem('marioY', marioY);
+    sessionStorage.setItem('tuberiasActivas', 'true');
+    sessionStorage.setItem('volverDeEjemplo', 'true');
+
+    // El resto de tu animación y navegación queda igual.
     marioX = marioX;
     mario.style.left = marioX + 'px';
 
@@ -853,6 +928,7 @@ function actualizar() {
             enElSuelo = false;
         }
 
+        comprobarPlanta1();
         comprobarPlanta2SobreTubo();
         comprobarContactoMoneda();
         comprobarEntradaTubo();
