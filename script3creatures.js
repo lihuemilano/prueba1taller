@@ -332,6 +332,8 @@ function entrarAlCastillo() {
         setTimeout(() => {
     sessionStorage.setItem('golpesBloque1', golpesBloque1);
     sessionStorage.setItem('golpesBloque2', golpesBloque2);
+            sessionStorage.setItem('marioX', 1500);
+    sessionStorage.setItem('marioY', 50);
 
     window.location.href = 'nivel3A.html';
 }, 1700);
