@@ -57,7 +57,8 @@ const teclas = {
     arrowright: false,
     arrowup: false,
     arrowdown: false,
-    ' ': false
+    ' ': false,
+    enter: false
 };
 
 let exeX = 800;
@@ -76,14 +77,40 @@ let powerups = [];
 
 window.addEventListener('keydown', (e) => {
     const tecla = e.key.toLowerCase();
+
     if (teclas.hasOwnProperty(tecla)) {
         teclas[tecla] = true;
-        if (tecla === ' ' || tecla === 'arrowup' || tecla === 'arrowdown') {
-            e.preventDefault();
-        }
     }
-    if (e.key === 'Enter') {
-        salirAlMenu();
+
+    if (
+        tecla === ' ' ||
+        tecla.startsWith('arrow') ||
+        tecla === 'spacebar'
+    ) {
+        e.preventDefault();
+    }
+
+    // Enter inicia el combate al cerrar el cartel inicial.
+    if (tecla === 'enter' && !juegoIniciado && !juegoTerminado) {
+        iniciarCombate();
+    }
+
+
+    if (tecla === 'p' && juegoTerminado) {
+        sessionStorage.clear();
+        window.location.href = 'index.html';
+    }
+    if (tecla === 'o' && juegoTerminado) {
+        sessionStorage.clear();
+        window.location.href = 'minijuego.html';
+    }
+});
+
+window.addEventListener('keyup', (e) => {
+    const tecla = e.key.toLowerCase();
+
+    if (teclas.hasOwnProperty(tecla)) {
+        teclas[tecla] = false;
     }
 });
 
@@ -245,7 +272,7 @@ function actualizar() {
         enElSuelo = false;
     }
 
-    if ((teclas.x || teclas[' ']) && poderMario === 'fire' && !mario.cooldownDisparo) {
+    if (teclas[' '] && poderMario === 'fire' && !mario.cooldownDisparo) {
         mario.cooldownDisparo = 18;
         lanzarFuegoMario();
         exeAprendioDisparo = true;
@@ -497,8 +524,4 @@ function mostrarModal(victoria) {
 
 function reiniciarNivel() {
     window.location.reload();
-}
-
-function salirAlMenu() {
-    window.location.href = "index1.html";
 }
