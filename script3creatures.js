@@ -8,8 +8,27 @@ const tituloInicial = document.getElementById('titulo-inicial');
 const ANCHO_MUNDO = 3000;
 const nivelSuelo = 50;
 
-let marioX = 171;
-let marioY = 230;
+// Si venimos del castillo, recuperar la posición guardada.
+// Si no hay una posición guardada, usar la posición inicial habitual.
+
+
+let marioX;
+let marioY;
+
+if (sessionStorage.getItem('volverDeEjemplo') === 'true') {
+    marioX = 150;
+    marioY = 230;
+    sessionStorage.removeItem('volverDeEjemplo');
+} else {
+    marioX = sessionStorage.getItem('marioX') !== null ?
+        Number(sessionStorage.getItem('marioX')) :
+        171;
+
+    marioY = sessionStorage.getItem('marioY') !== null ?
+        Number(sessionStorage.getItem('marioY')) :
+        230;
+}
+
 
 let velocidadY = 0;
 let enElSuelo = false;
@@ -24,27 +43,41 @@ const velocidadX = 7;
 const gravedad = 0.8;
 const fuerzaSalto = 17;
 
-const teclas = {
-    w: false,
-    a: false,
-    s: false,
-    d: false
-};
+// Estados independientes para cada dirección
+let flechaIzquierda = false;
+let flechaDerecha = false;
+let flechaArriba = false;
 
+// Captura de eventos para las flechas
 window.addEventListener('keydown', (e) => {
-    const tecla = e.key.toLowerCase();
-
-    if (teclas.hasOwnProperty(tecla)) {
-        teclas[tecla] = true;
+    const k = e.key;
+    if (k === 'ArrowLeft' || k === 'Left') {
+        flechaIzquierda = true;
+        e.preventDefault();
+    } else if (k === 'ArrowRight' || k === 'Right') {
+        flechaDerecha = true;
+        e.preventDefault();
+    } else if (k === 'ArrowUp' || k === 'Up') {
+        flechaArriba = true;
+        e.preventDefault();
     }
 });
 
 window.addEventListener('keyup', (e) => {
-    const tecla = e.key.toLowerCase();
-
-    if (teclas.hasOwnProperty(tecla)) {
-        teclas[tecla] = false;
+    const k = e.key;
+    if (k === 'ArrowLeft' || k === 'Left') {
+        flechaIzquierda = false;
+    } else if (k === 'ArrowRight' || k === 'Right') {
+        flechaDerecha = false;
+    } else if (k === 'ArrowUp' || k === 'Up') {
+        flechaArriba = false;
     }
+});
+
+window.addEventListener('blur', () => {
+    flechaIzquierda = false;
+    flechaDerecha = false;
+    flechaArriba = false;
 });
 
 function actualizarCamara() {
@@ -148,6 +181,55 @@ function activarBloque2() {
     }
 }
 
+function restaurarCarteles() {
+    ocultarTodosLosCarteles();
+
+    if (golpesBloque1 > 0 && cartel1) {
+        cartel1.classList.remove('oculto');
+
+        const contenido1 = document.getElementById('ml1-contenido1');
+        const contenido2 = document.getElementById('ml1-contenido2');
+
+        if (contenido1) {
+            contenido1.classList.toggle('oculto', golpesBloque1 !== 1);
+        }
+
+        if (contenido2) {
+            contenido2.classList.toggle('oculto', golpesBloque1 !== 2);
+        }
+    }
+
+    if (golpesBloque2 > 0 && cartel2) {
+        cartel2.classList.remove('oculto');
+
+        const contenido1 = document.getElementById('ml2-contenido1');
+        const contenido2 = document.getElementById('ml2-contenido2');
+
+        if (contenido1) {
+            contenido1.classList.toggle('oculto', golpesBloque2 !== 1);
+        }
+
+        if (contenido2) {
+            contenido2.classList.toggle('oculto', golpesBloque2 !== 2);
+        }
+    }
+}
+
+// Animación genérica de impacto visual
+function animarImpactoBloque(elem) {
+    elem.classList.remove('golpeado');
+    void elem.offsetWidth; // Forzar reflow
+    elem.classList.add('golpeado');
+
+    // Salto físico del bloque en píxeles
+    const bottomBase = parseInt(elem.style.bottom) || 190;
+    elem.style.bottom = (bottomBase + 18) + 'px';
+
+    setTimeout(() => {
+        elem.style.bottom = bottomBase + 'px';
+    }, 120);
+}
+
 function resolverColisiones(siguienteX, siguienteY) {
     const obstaculos = document.querySelectorAll('.obstaculo');
 
@@ -214,23 +296,31 @@ function resolverColisiones(siguienteX, siguienteY) {
             velocidadY = 0;
 
             if (elem.id === 'bloque-mensaje-ml') {
+                animarImpactoBloque(elem);
+
                 if (golpesBloque1 === 0) {
                     golpesBloque1 = 1;
                     activarBloque1();
+                    elem.classList.add('agrietado');
                 } else if (golpesBloque1 === 1) {
                     golpesBloque1 = 2;
                     activarBloque1();
+                    elem.classList.remove('agrietado');
                     elem.classList.add('usado');
                 }
             }
 
             if (elem.id === 'bloque-mensaje-ml2') {
+                animarImpactoBloque(elem);
+
                 if (golpesBloque2 === 0) {
                     golpesBloque2 = 1;
                     activarBloque2();
+                    elem.classList.add('agrietado');
                 } else if (golpesBloque2 === 1) {
                     golpesBloque2 = 2;
                     activarBloque2();
+                    elem.classList.remove('agrietado');
                     elem.classList.add('usado');
                 }
             }
@@ -247,9 +337,9 @@ function entrarAlCastillo() {
 
     entrandoAlCastillo = true;
 
-    teclas.a = false;
-    teclas.d = false;
-    teclas.w = false;
+    flechaIzquierda = false;
+    flechaDerecha = false;
+    flechaArriba = false;
 
     mario.className = '';
     mario.classList.add('mario-saludando');
@@ -259,24 +349,35 @@ function entrarAlCastillo() {
         mario.classList.add('entrando-castillo');
 
         setTimeout(() => {
-            window.location.href = 'nivel3A.html';
-        }, 1700);
+            sessionStorage.setItem('golpesBloque1', golpesBloque1);
+            sessionStorage.setItem('golpesBloque2', golpesBloque2);
+            sessionStorage.setItem('golpesBloque1', golpesBloque1);
+            sessionStorage.setItem('golpesBloque2', golpesBloque2);
+            sessionStorage.setItem('marioX', 3250);
+            sessionStorage.setItem('marioY', 50);
 
+            sessionStorage.removeItem('volverDeEjemplo');
+            window.location.href = 'nivel2.html';
+        }, 1700);
+        activarBloque1();
+        activarBloque2();
     }, 1200);
 }
+
+
 
 function actualizar() {
     let nuevoX = marioX;
     let moviendose = false;
 
     if (!entrandoAlCastillo) {
-        if (teclas.a) {
+        if (flechaIzquierda) {
             nuevoX -= velocidadX;
             direccion = -1;
             moviendose = true;
         }
 
-        if (teclas.d) {
+        if (flechaDerecha) {
             nuevoX += velocidadX;
             direccion = 1;
             moviendose = true;
@@ -293,7 +394,7 @@ function actualizar() {
         nuevoX = ANCHO_MUNDO - anchoMario;
     }
 
-    if (teclas.w && enElSuelo && !entrandoAlCastillo) {
+    if (flechaArriba && enElSuelo && !entrandoAlCastillo) {
         velocidadY = fuerzaSalto;
         enElSuelo = false;
     }
@@ -361,4 +462,11 @@ mario.style.bottom = marioY + 'px';
 mario.style.transform =
     'scaleX(1.2) scaleY(1.2)';
 
+restaurarCarteles();
+
+if (tituloInicial) {
+    tituloInicial.classList.remove('oculto');
+}
+
+actualizarCamara();
 actualizar();
