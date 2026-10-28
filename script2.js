@@ -44,20 +44,30 @@ const tuboPlantaTopY = tuboPlantaBottom + tuboPlantaHeight;
 
 const parametros = new URLSearchParams(window.location.search);
 
+
 let marioX;
 
 if (sessionStorage.getItem('volverDeEjemplo') === 'true') {
-    marioX = 20;
+    marioX = Number(sessionStorage.getItem('marioXAntesDelEjemplo')) || 171;
+
     sessionStorage.removeItem('volverDeEjemplo');
+    sessionStorage.removeItem('marioXAntesDelEjemplo');
 } else if (sessionStorage.getItem('marioX') !== null) {
     marioX = Number(sessionStorage.getItem('marioX'));
 } else {
     marioX = 171;
 }
 
-let marioY = sessionStorage.getItem('marioY') !== null ?
-    Number(sessionStorage.getItem('marioY')) :
-    230;
+let marioY = sessionStorage.getItem('marioYAntesDelEjemplo') !== null ?
+    Number(sessionStorage.getItem('marioYAntesDelEjemplo')) :
+    (
+        sessionStorage.getItem('marioY') !== null ?
+        Number(sessionStorage.getItem('marioY')) :
+        230
+    );
+
+sessionStorage.removeItem('marioYAntesDelEjemplo');
+
 
 
 let velocidadY = 0;
@@ -689,19 +699,18 @@ function comprobarEntradaTubosJuegos() {
 
 
 
-
 function entrarEnTuberiaJuego(pagina) {
-
     entrandoJuego = true;
     controlesBloqueados = true;
 
+    // Guardar la posición de Mario en nivel2 para cuando regrese.
     sessionStorage.setItem('marioXAntesDelEjemplo', marioX);
-    sessionStorage.setItem('marioY', marioY);
-    sessionStorage.setItem('tuberiasActivas', 'true');
-    sessionStorage.setItem('volverDeEjemplo', 'true');
+    sessionStorage.setItem('marioYAntesDelEjemplo', marioY);
 
-    // El resto de tu animación y navegación queda igual.
-    marioX = marioX;
+    // Indicar que el ejemplo debe empezar desde el comienzo.
+    sessionStorage.setItem('iniciarEjemploDesdeComienzo', 'true');
+    sessionStorage.setItem('tuberiasActivas', 'true');
+
     mario.style.left = marioX + 'px';
 
     mario.className = '';
