@@ -271,9 +271,9 @@ function entrarAlCastillo() {
 
     entrandoAlCastillo = true;
 
-    moverIzquierda = false;
-    moverDerecha = false;
-    saltar = false;
+    flechaIzquierda = false;
+    flechaDerecha = false;
+    flechaArriba = false;
 
     mario.className = '';
     mario.classList.add('mario-saludando');
@@ -283,9 +283,13 @@ function entrarAlCastillo() {
         mario.classList.add('entrando-castillo');
 
         setTimeout(() => {
-            window.location.href = 'nivel3A.html';
-        }, 1700);
+    sessionStorage.setItem('golpesBloque1', golpesBloque1);
+    sessionStorage.setItem('golpesBloque2', golpesBloque2);
 
+    window.location.href = 'nivel3A.html';
+}, 1700);
+activarBloque1();
+activarBloque2();
     }, 1200);
 }
 
