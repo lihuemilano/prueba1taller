@@ -8,8 +8,13 @@ const tituloInicial = document.getElementById('titulo-inicial');
 const ANCHO_MUNDO = 3000;
 const nivelSuelo = 50;
 
-let marioX = 171;
-let marioY = 230;
+let marioX = sessionStorage.getItem('marioX') !== null
+    ? Number(sessionStorage.getItem('marioX'))
+    : 171;
+
+let marioY = sessionStorage.getItem('marioY') !== null
+    ? Number(sessionStorage.getItem('marioY'))
+    : 230;
 
 let velocidadY = 0;
 let enElSuelo = false;
@@ -319,13 +324,14 @@ function entrarAlCastillo() {
         mario.classList.remove('mario-saludando');
         mario.classList.add('entrando-castillo');
 
-        setTimeout(() => {
+      setTimeout(() => {
     sessionStorage.setItem('golpesBloque1', golpesBloque1);
     sessionStorage.setItem('golpesBloque2', golpesBloque2);
+    sessionStorage.setItem('marioX', 1500);
+    sessionStorage.setItem('marioY', 50);
 
     window.location.href = 'nivel3A.html';
 }, 1700);
-
     }, 1200);
 }
 
