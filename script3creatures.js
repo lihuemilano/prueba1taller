@@ -15,19 +15,28 @@ const nivelSuelo = 50;
 let marioX;
 let marioY;
 
-if (sessionStorage.getItem('volverDeEjemplo') === 'true') {
+if (sessionStorage.getItem('iniciarEjemploDesdeComienzo') === 'true') {
     marioX = 150;
     marioY = 230;
+
+    sessionStorage.removeItem('iniciarEjemploDesdeComienzo');
+    sessionStorage.removeItem('marioX');
+    sessionStorage.removeItem('marioY');
+} else if (sessionStorage.getItem('volverDeEjemplo') === 'true') {
+    marioX = 150;
+    marioY = 230;
+
     sessionStorage.removeItem('volverDeEjemplo');
 } else {
     marioX = sessionStorage.getItem('marioX') !== null ?
         Number(sessionStorage.getItem('marioX')) :
-        171;
+        150;
 
     marioY = sessionStorage.getItem('marioY') !== null ?
         Number(sessionStorage.getItem('marioY')) :
         230;
 }
+
 
 
 let velocidadY = 0;
