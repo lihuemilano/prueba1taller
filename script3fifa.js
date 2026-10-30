@@ -334,9 +334,9 @@ function entrarAlCastillo() {
 
     entrandoAlCastillo = true;
 
-    flechaIzquierda = false;
-    flechaDerecha = false;
-    flechaArriba = false;
+ moverIzquierda = false;
+moverDerecha = false;
+saltar = false;
 
     mario.className = '';
     mario.classList.add('mario-saludando');
@@ -346,8 +346,6 @@ function entrarAlCastillo() {
         mario.classList.add('entrando-castillo');
 
         setTimeout(() => {
-            sessionStorage.setItem('golpesBloque1', golpesBloque1);
-            sessionStorage.setItem('golpesBloque2', golpesBloque2);
             sessionStorage.setItem('golpesBloque1', golpesBloque1);
             sessionStorage.setItem('golpesBloque2', golpesBloque2);
             sessionStorage.setItem('marioX', 3250);
