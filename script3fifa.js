@@ -1,3 +1,4 @@
+
 const mario = document.getElementById('mario');
 const escenario = document.getElementById('escenario');
 
@@ -7,8 +8,6 @@ const tituloInicial = document.getElementById('titulo-inicial');
 
 const ANCHO_MUNDO = 3000;
 const nivelSuelo = 50;
-
-
 
 let marioX;
 let marioY;
@@ -20,85 +19,80 @@ if (sessionStorage.getItem('iniciarEjemploDesdeComienzo') === 'true') {
     sessionStorage.removeItem('iniciarEjemploDesdeComienzo');
     sessionStorage.removeItem('marioX');
     sessionStorage.removeItem('marioY');
+
 } else if (sessionStorage.getItem('volverDeEjemplo') === 'true') {
     marioX = 150;
     marioY = 230;
 
     sessionStorage.removeItem('volverDeEjemplo');
+
 } else {
-    marioX = sessionStorage.getItem('marioX') !== null ?
-        Number(sessionStorage.getItem('marioX')) :
-        150;
+    marioX = sessionStorage.getItem('marioX') !== null
+        ? Number(sessionStorage.getItem('marioX'))
+        : 150;
 
-    marioY = sessionStorage.getItem('marioY') !== null ?
-        Number(sessionStorage.getItem('marioY')) :
-        230;
+    marioY = sessionStorage.getItem('marioY') !== null
+        ? Number(sessionStorage.getItem('marioY'))
+        : 230;
 }
-
-
 
 let velocidadY = 0;
 let enElSuelo = false;
 let direccion = 1;
 let camaraX = 0;
 
-let golpesBloque1 =
-    Number(sessionStorage.getItem('golpesBloque1')) || 0;
-
-let golpesBloque2 =
-    Number(sessionStorage.getItem('golpesBloque2')) || 0;
+let golpesBloque1 = 0;
+let golpesBloque2 = 0;
 let entrandoAlCastillo = false;
 
 const velocidadX = 7;
 const gravedad = 0.8;
 const fuerzaSalto = 17;
 
-// Variables de dirección exclusivas
-let moverIzquierda = false;
-let moverDerecha = false;
-let saltar = false;
+let flechaIzquierda = false;
+let flechaDerecha = false;
+let flechaArriba = false;
 
-// Detección por nombre de tecla, código físico y código numérico (37, 38, 39)
+// CONTROLES
+
 window.addEventListener('keydown', (e) => {
-    const key = e.key;
-    const code = e.code;
-    const keyCode = e.keyCode || e.which;
+    const k = e.key;
 
-    if (key === 'ArrowLeft' || code === 'ArrowLeft' || key === 'Left' || keyCode === 37) {
-        moverIzquierda = true;
+    if (k === 'ArrowLeft' || k === 'Left') {
+        flechaIzquierda = true;
         e.preventDefault();
-    }
-    if (key === 'ArrowRight' || code === 'ArrowRight' || key === 'Right' || keyCode === 39) {
-        moverDerecha = true;
+
+    } else if (k === 'ArrowRight' || k === 'Right') {
+        flechaDerecha = true;
         e.preventDefault();
-    }
-    if (key === 'ArrowUp' || code === 'ArrowUp' || key === 'Up' || keyCode === 38) {
-        saltar = true;
+
+    } else if (k === 'ArrowUp' || k === 'Up') {
+        flechaArriba = true;
         e.preventDefault();
     }
 });
 
 window.addEventListener('keyup', (e) => {
-    const key = e.key;
-    const code = e.code;
-    const keyCode = e.keyCode || e.which;
+    const k = e.key;
 
-    if (key === 'ArrowLeft' || code === 'ArrowLeft' || key === 'Left' || keyCode === 37) {
-        moverIzquierda = false;
-    }
-    if (key === 'ArrowRight' || code === 'ArrowRight' || key === 'Right' || keyCode === 39) {
-        moverDerecha = false;
-    }
-    if (key === 'ArrowUp' || code === 'ArrowUp' || key === 'Up' || keyCode === 38) {
-        saltar = false;
+    if (k === 'ArrowLeft' || k === 'Left') {
+        flechaIzquierda = false;
+
+    } else if (k === 'ArrowRight' || k === 'Right') {
+        flechaDerecha = false;
+
+    } else if (k === 'ArrowUp' || k === 'Up') {
+        flechaArriba = false;
     }
 });
 
 window.addEventListener('blur', () => {
-    moverIzquierda = false;
-    moverDerecha = false;
-    saltar = false;
+    flechaIzquierda = false;
+    flechaDerecha = false;
+    flechaArriba = false;
 });
+
+// CÁMARA
 
 function actualizarCamara() {
     const anchoPantalla = window.innerWidth;
@@ -120,6 +114,8 @@ function actualizarCamara() {
 
     escenario.style.transform = `translateX(${-camaraX}px)`;
 }
+
+// CARTELES
 
 function ocultarTodosLosCarteles() {
     if (tituloInicial) {
@@ -152,8 +148,6 @@ function activarBloque1() {
     if (contenido2) {
         contenido2.classList.toggle('oculto', golpesBloque1 !== 2);
     }
-
-    sessionStorage.setItem('ultimoCartelML', '1');
 }
 
 function activarBloque2() {
@@ -173,26 +167,43 @@ function activarBloque2() {
     if (contenido2) {
         contenido2.classList.toggle('oculto', golpesBloque2 !== 2);
     }
-
-    sessionStorage.setItem('ultimoCartelML', '2');
 }
+
 function restaurarCarteles() {
     ocultarTodosLosCarteles();
 
-    const ultimoCartel = sessionStorage.getItem('ultimoCartelML');
+    if (golpesBloque1 > 0 && cartel1) {
+        cartel1.classList.remove('oculto');
 
-    if (ultimoCartel === '1' && golpesBloque1 > 0) {
-        activarBloque1();
-    } else if (ultimoCartel === '2' && golpesBloque2 > 0) {
-        activarBloque2();
-    } else if (golpesBloque1 > 0) {
-        activarBloque1();
-    } else if (golpesBloque2 > 0) {
-        activarBloque2();
-    } else if (tituloInicial) {
-        tituloInicial.classList.remove('oculto');
+        const contenido1 = document.getElementById('ml1-contenido1');
+        const contenido2 = document.getElementById('ml1-contenido2');
+
+        if (contenido1) {
+            contenido1.classList.toggle('oculto', golpesBloque1 !== 1);
+        }
+
+        if (contenido2) {
+            contenido2.classList.toggle('oculto', golpesBloque1 !== 2);
+        }
+    }
+
+    if (golpesBloque2 > 0 && cartel2) {
+        cartel2.classList.remove('oculto');
+
+        const contenido1 = document.getElementById('ml2-contenido1');
+        const contenido2 = document.getElementById('ml2-contenido2');
+
+        if (contenido1) {
+            contenido1.classList.toggle('oculto', golpesBloque2 !== 1);
+        }
+
+        if (contenido2) {
+            contenido2.classList.toggle('oculto', golpesBloque2 !== 2);
+        }
     }
 }
+
+// ANIMACIÓN DE IMPACTO
 
 function animarImpactoBloque(elem) {
     elem.classList.remove('golpeado');
@@ -200,12 +211,15 @@ function animarImpactoBloque(elem) {
     elem.classList.add('golpeado');
 
     const bottomBase = parseInt(elem.style.bottom) || 190;
+
     elem.style.bottom = (bottomBase + 18) + 'px';
 
     setTimeout(() => {
         elem.style.bottom = bottomBase + 'px';
     }, 120);
 }
+
+// COLISIONES
 
 function resolverColisiones(siguienteX, siguienteY) {
     const obstaculos = document.querySelectorAll('.obstaculo');
@@ -248,6 +262,7 @@ function resolverColisiones(siguienteX, siguienteY) {
         if (!previoSolapeX) {
             if (marioX + marioWidth <= bLeft) {
                 resultado.x = bLeft - marioWidth;
+
             } else if (marioX >= bLeft + bWidth) {
                 resultado.x = bLeft + bWidth;
             }
@@ -255,7 +270,7 @@ function resolverColisiones(siguienteX, siguienteY) {
             return;
         }
 
-        // Colisión desde abajo: Mario cae sobre el obstáculo
+        // COLISIÓN POR ABAJO DEL BLOQUE
         if (
             velocidadY <= 0 &&
             marioY >= bBottom + bHeight - 20
@@ -266,7 +281,7 @@ function resolverColisiones(siguienteX, siguienteY) {
             return;
         }
 
-        // Colisión desde arriba: Mario golpea el bloque
+        // GOLPE DESDE ABAJO
         if (
             velocidadY > 0 &&
             marioY + marioHeight <= bBottom + 20
@@ -274,13 +289,11 @@ function resolverColisiones(siguienteX, siguienteY) {
             resultado.y = bBottom - marioHeight;
             velocidadY = 0;
 
-            // BLOQUE INTERACTIVO 1
             if (elem.id === 'bloque-mensaje-ml') {
                 if (golpesBloque1 < 2) {
                     animarImpactoBloque(elem);
 
                     golpesBloque1++;
-                    sessionStorage.setItem('golpesBloque1', golpesBloque1);
 
                     activarBloque1();
 
@@ -293,13 +306,11 @@ function resolverColisiones(siguienteX, siguienteY) {
                 }
             }
 
-            // BLOQUE INTERACTIVO 2
             if (elem.id === 'bloque-mensaje-ml2') {
                 if (golpesBloque2 < 2) {
                     animarImpactoBloque(elem);
 
                     golpesBloque2++;
-                    sessionStorage.setItem('golpesBloque2', golpesBloque2);
 
                     activarBloque2();
 
@@ -317,6 +328,8 @@ function resolverColisiones(siguienteX, siguienteY) {
     return resultado;
 }
 
+// ENTRAR AL CASTILLO Y VOLVER AL NIVEL PRINCIPAL
+
 function entrarAlCastillo() {
     if (entrandoAlCastillo) {
         return;
@@ -324,9 +337,9 @@ function entrarAlCastillo() {
 
     entrandoAlCastillo = true;
 
- moverIzquierda = false;
-moverDerecha = false;
-saltar = false;
+    flechaIzquierda = false;
+    flechaDerecha = false;
+    flechaArriba = false;
 
     mario.className = '';
     mario.classList.add('mario-saludando');
@@ -338,27 +351,34 @@ saltar = false;
         setTimeout(() => {
             sessionStorage.setItem('golpesBloque1', golpesBloque1);
             sessionStorage.setItem('golpesBloque2', golpesBloque2);
-            sessionStorage.setItem('marioX', 3250);
-            sessionStorage.setItem('marioY', 50);
+
+            // POSICIÓN DE REGRESO: MEDIO DE LAS DOS TUBERÍAS
+            sessionStorage.setItem('marioX', 1500);
+            sessionStorage.setItem('marioY', 230);
 
             sessionStorage.removeItem('volverDeEjemplo');
+
             window.location.href = 'nivel2.html';
+
         }, 1700);
+
     }, 1200);
 }
+
+// ACTUALIZACIÓN DEL JUEGO
 
 function actualizar() {
     let nuevoX = marioX;
     let moviendose = false;
 
     if (!entrandoAlCastillo) {
-        if (moverIzquierda) {
+        if (flechaIzquierda) {
             nuevoX -= velocidadX;
             direccion = -1;
             moviendose = true;
         }
 
-        if (moverDerecha) {
+        if (flechaDerecha) {
             nuevoX += velocidadX;
             direccion = 1;
             moviendose = true;
@@ -375,7 +395,7 @@ function actualizar() {
         nuevoX = ANCHO_MUNDO - anchoMario;
     }
 
-    if (saltar && enElSuelo && !entrandoAlCastillo) {
+    if (flechaArriba && enElSuelo && !entrandoAlCastillo) {
         velocidadY = fuerzaSalto;
         enElSuelo = false;
     }
@@ -395,10 +415,12 @@ function actualizar() {
     if (colision.enPlataforma) {
         enElSuelo = true;
         velocidadY = 0;
+
     } else if (marioY <= nivelSuelo) {
         marioY = nivelSuelo;
         velocidadY = 0;
         enElSuelo = true;
+
     } else {
         enElSuelo = false;
     }
@@ -408,8 +430,10 @@ function actualizar() {
 
         if (!enElSuelo) {
             mario.classList.add('mario-saltando');
+
         } else if (moviendose) {
             mario.classList.add('mario-corriendo');
+
         } else {
             mario.classList.add('mario-idle');
         }
@@ -424,7 +448,8 @@ function actualizar() {
     const puertaCastilloX = 2860;
     const puertaCastilloAncho = 80;
 
-    if (!entrandoAlCastillo &&
+    if (
+        !entrandoAlCastillo &&
         marioX + 48 >= puertaCastilloX &&
         marioX <= puertaCastilloX + puertaCastilloAncho &&
         marioY <= 120
@@ -437,6 +462,8 @@ function actualizar() {
     requestAnimationFrame(actualizar);
 }
 
+// INICIO
+
 mario.style.left = marioX + 'px';
 mario.style.bottom = marioY + 'px';
 
@@ -445,4 +472,10 @@ mario.style.transform =
 
 restaurarCarteles();
 
+if (tituloInicial && golpesBloque1 === 0 && golpesBloque2 === 0) {
+    tituloInicial.classList.remove('oculto');
+}
+
+actualizarCamara();
 actualizar();
+
