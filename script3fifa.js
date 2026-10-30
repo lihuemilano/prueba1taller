@@ -298,17 +298,6 @@ function resolverColisiones(siguienteX, siguienteY) {
             return;
         }
 
-        // Mario cae sobre un obstáculo
-        if (
-            velocidadY <= 0 &&
-            marioY >= bBottom + bHeight - 20
-        ) {
-            resultado.y = bBottom + bHeight;
-            velocidadY = 0;
-            resultado.enPlataforma = true;
-            return;
-        }
-
         // Mario golpea un bloque desde abajo
         if (
             velocidadY > 0 &&
