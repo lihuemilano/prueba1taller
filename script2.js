@@ -3,13 +3,26 @@ const escenario = document.getElementById('escenario');
 const tuberiaJuego1 = document.getElementById('tuberia-juego1');
 const tuberiaJuego2 = document.getElementById('tuberia-juego2');
 let entrandoJuego = false;
-let tuberiasJuegosActivas = sessionStorage.getItem('tuberiasActivas') === 'true';
+let entrandoJuego = false;
 
+let tuberiasJuegosActivas =
+    sessionStorage.getItem('tuberiasActivas') === 'true';
 
 const tuberiaFinal = document.getElementById('tuberia-final');
+
+// Las cañerías empiezan escondidas
+if (tuberiaJuego1) {
+    tuberiaJuego1.classList.remove('subida');
+}
+
+if (tuberiaJuego2) {
+    tuberiaJuego2.classList.remove('subida');
+}
+
+// Si ya se desbloquearon anteriormente, aparecen levantadas
 if (tuberiasJuegosActivas) {
-    tuberiaJuego1.classList.add('subida');
-    tuberiaJuego2.classList.add('subida');
+    if (tuberiaJuego1) tuberiaJuego1.classList.add('subida');
+    if (tuberiaJuego2) tuberiaJuego2.classList.add('subida');
 }
 
 const cartelJuego1 = document.getElementById('cartel-juego1');
