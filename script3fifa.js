@@ -235,6 +235,21 @@ function restaurarCarteles() {
     }
 }
 
+// Animación genérica de impacto visual
+function animarImpactoBloque(elem) {
+    elem.classList.remove('golpeado');
+    void elem.offsetWidth;
+    elem.classList.add('golpeado');
+
+    // Salto físico del bloque en píxeles
+    const bottomBase = parseInt(elem.style.bottom) || 190;
+    elem.style.bottom = (bottomBase + 18) + 'px';
+
+    setTimeout(() => {
+        elem.style.bottom = bottomBase + 'px';
+    }, 120);
+}
+
 function resolverColisiones(siguienteX, siguienteY) {
     const obstaculos = document.querySelectorAll('.obstaculo');
 
