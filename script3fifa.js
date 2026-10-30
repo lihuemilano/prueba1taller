@@ -334,7 +334,7 @@ function resolverColisiones(siguienteX, siguienteY) {
                 }
             }
 
-            if (elem.id === 'bloque-mensaje-ml2') {
+           if (elem.id === 'bloque-mensaje-ml2') {
                 if (golpesBloque2 < 2) {
                     animarImpactoBloque(elem);
 
@@ -347,7 +347,7 @@ function resolverColisiones(siguienteX, siguienteY) {
                     } else {
                         elem.classList.remove('agrietado');
                         elem.classList.add('usado');
-                    }
+                   }
                 }
             }
         }
