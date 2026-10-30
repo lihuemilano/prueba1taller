@@ -3,7 +3,7 @@ const escenario = document.getElementById('escenario');
 
 const cartel1 = document.getElementById('cartel-ml');
 const cartel2 = document.getElementById('cartel-ml2');
-const tituloInicial = document.getElementById('titulo-inicial');
+const tituloInicial = document.getElementById('titulo-inicial');F
 
 const ANCHO_MUNDO = 3000;
 const nivelSuelo = 50;
@@ -293,10 +293,32 @@ function resolverColisiones(siguienteX, siguienteY) {
             return;
         }
 
-        if (
-            velocidadY > 0 &&
-            marioY + marioHeight <= bBottom + 20
-        ) {
+       if (velocidadY > 0 && marioY + marioHeight <= bBottom + 25) {
+    resultado.y = bBottom - marioHeight;
+    velocidadY = 0;
+
+    if (elem.id === 'bloque-mensaje-ml') {
+        if (golpesBloque1 < 2) {
+            golpesBloque1++;
+            activarBloque1();
+
+            if (golpesBloque1 === 2) {
+                elem.classList.add('usado');
+            }
+        }
+    }
+
+    if (elem.id === 'bloque-mensaje-ml2') {
+        if (golpesBloque2 < 2) {
+            golpesBloque2++;
+            activarBloque2();
+
+            if (golpesBloque2 === 2) {
+                elem.classList.add('usado');
+            }
+        }
+    }
+}
             resultado.y = bBottom - marioHeight;
             velocidadY = 0;
 
