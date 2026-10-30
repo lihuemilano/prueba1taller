@@ -138,100 +138,59 @@ function ocultarTodosLosCarteles() {
 function activarBloque1() {
     ocultarTodosLosCarteles();
 
-    if (!cartel1) {
-        return;
-    }
+    if (!cartel1) return;
 
     cartel1.classList.remove('oculto');
 
     const contenido1 = document.getElementById('ml1-contenido1');
     const contenido2 = document.getElementById('ml1-contenido2');
 
-    if (golpesBloque1 === 1) {
-        if (contenido1) {
-            contenido1.classList.remove('oculto');
-        }
-
-        if (contenido2) {
-            contenido2.classList.add('oculto');
-        }
+    if (contenido1) {
+        contenido1.classList.toggle('oculto', golpesBloque1 !== 1);
     }
 
-    if (golpesBloque1 === 2) {
-        if (contenido1) {
-            contenido1.classList.add('oculto');
-        }
-
-        if (contenido2) {
-            contenido2.classList.remove('oculto');
-        }
+    if (contenido2) {
+        contenido2.classList.toggle('oculto', golpesBloque1 !== 2);
     }
+
+    sessionStorage.setItem('ultimoCartelML', '1');
 }
 
 function activarBloque2() {
     ocultarTodosLosCarteles();
 
-    if (!cartel2) {
-        return;
-    }
+    if (!cartel2) return;
 
     cartel2.classList.remove('oculto');
 
     const contenido1 = document.getElementById('ml2-contenido1');
     const contenido2 = document.getElementById('ml2-contenido2');
 
-    if (golpesBloque2 === 1) {
-        if (contenido1) {
-            contenido1.classList.remove('oculto');
-        }
-
-        if (contenido2) {
-            contenido2.classList.add('oculto');
-        }
+    if (contenido1) {
+        contenido1.classList.toggle('oculto', golpesBloque2 !== 1);
     }
 
-    if (golpesBloque2 === 2) {
-        if (contenido1) {
-            contenido1.classList.add('oculto');
-        }
-
-        if (contenido2) {
-            contenido2.classList.remove('oculto');
-        }
+    if (contenido2) {
+        contenido2.classList.toggle('oculto', golpesBloque2 !== 2);
     }
+
+    sessionStorage.setItem('ultimoCartelML', '2');
 }
-
 function restaurarCarteles() {
     ocultarTodosLosCarteles();
 
-    if (golpesBloque1 > 0 && cartel1) {
-        cartel1.classList.remove('oculto');
+    const ultimoCartel = sessionStorage.getItem('ultimoCartelML');
 
-        const contenido1 = document.getElementById('ml1-contenido1');
-        const contenido2 = document.getElementById('ml1-contenido2');
-
-        if (contenido1) {
-            contenido1.classList.toggle('oculto', golpesBloque1 !== 1);
-        }
-
-        if (contenido2) {
-            contenido2.classList.toggle('oculto', golpesBloque1 !== 2);
-        }
-    }
-
-    if (golpesBloque2 > 0 && cartel2) {
-        cartel2.classList.remove('oculto');
-
-        const contenido1 = document.getElementById('ml2-contenido1');
-        const contenido2 = document.getElementById('ml2-contenido2');
-
-        if (contenido1) {
-            contenido1.classList.toggle('oculto', golpesBloque2 !== 1);
-        }
-
-        if (contenido2) {
-            contenido2.classList.toggle('oculto', golpesBloque2 !== 2);
-        }
+    if (ultimoCartel === '1' && golpesBloque1 > 0) {
+        activarBloque1();
+    } else if (ultimoCartel === '2' && golpesBloque2 > 0) {
+        activarBloque2();
+    } else if (golpesBloque1 > 0) {
+        activarBloque1();
+    } else if (golpesBloque2 > 0) {
+        activarBloque2();
+    } else if (tituloInicial) {
+        tituloInicial.classList.remove('oculto');
     }
 }
 
@@ -484,8 +443,6 @@ mario.style.bottom = marioY + 'px';
 mario.style.transform =
     'scaleX(1.2) scaleY(1.2)';
 
-if (tituloInicial) {
-    tituloInicial.classList.remove('oculto');
-}
+restaurarCarteles();
 
 actualizar();
