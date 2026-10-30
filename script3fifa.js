@@ -3,7 +3,7 @@ const escenario = document.getElementById('escenario');
 
 const cartel1 = document.getElementById('cartel-ml');
 const cartel2 = document.getElementById('cartel-ml2');
-const tituloInicial = document.getElementById('titulo-inicial');F
+const tituloInicial = document.getElementById('titulo-inicial');
 
 const ANCHO_MUNDO = 3000;
 const nivelSuelo = 50;
@@ -298,6 +298,7 @@ function resolverColisiones(siguienteX, siguienteY) {
             return;
         }
 
+        // Mario cae sobre un obstáculo
         if (
             velocidadY <= 0 &&
             marioY >= bBottom + bHeight - 20
@@ -308,73 +309,45 @@ function resolverColisiones(siguienteX, siguienteY) {
             return;
         }
 
-     if (
-    velocidadY > 0 &&
-    marioY + marioHeight <= bBottom + bHeight + 10
-) {
-    resultado.y = bBottom - marioHeight;
-    velocidadY = 0;
-
-    if (elem.id === 'bloque-mensaje-ml') {
-        if (golpesBloque1 === 0) {
-            golpesBloque1 = 1;
-            sessionStorage.setItem('golpesBloque1', golpesBloque1);
-            activarBloque1();
-        } else if (golpesBloque1 === 1) {
-            golpesBloque1 = 2;
-            sessionStorage.setItem('golpesBloque1', golpesBloque1);
-            activarBloque1();
-            elem.classList.add('usado');
-        }
-    }
-
-    if (elem.id === 'bloque-mensaje-ml2') {
-        if (golpesBloque2 === 0) {
-            golpesBloque2 = 1;
-            sessionStorage.setItem('golpesBloque2', golpesBloque2);
-            activarBloque2();
-        } else if (golpesBloque2 === 1) {
-            golpesBloque2 = 2;
-            sessionStorage.setItem('golpesBloque2', golpesBloque2);
-            activarBloque2();
-            elem.classList.add('usado');
-        }
-    }
-}
-
-    if (elem.id === 'bloque-mensaje-ml2') {
-        if (golpesBloque2 < 2) {
-            golpesBloque2++;
-            activarBloque2();
-
-            if (golpesBloque2 === 2) {
-                elem.classList.add('usado');
-            }
-        }
-    }
-}
+        // Mario golpea un bloque desde abajo
+        if (
+            velocidadY > 0 &&
+            marioY + marioHeight <= bBottom + 20
+        ) {
             resultado.y = bBottom - marioHeight;
             velocidadY = 0;
 
             if (elem.id === 'bloque-mensaje-ml') {
-                if (golpesBloque1 === 0) {
-                    golpesBloque1 = 1;
+                if (golpesBloque1 < 2) {
+                    animarImpactoBloque(elem);
+
+                    golpesBloque1++;
+                    sessionStorage.setItem('golpesBloque1', golpesBloque1);
                     activarBloque1();
-                } else if (golpesBloque1 === 1) {
-                    golpesBloque1 = 2;
-                    activarBloque1();
-                    elem.classList.add('usado');
+
+                    if (golpesBloque1 === 1) {
+                        elem.classList.add('agrietado');
+                    } else {
+                        elem.classList.remove('agrietado');
+                        elem.classList.add('usado');
+                    }
                 }
             }
 
             if (elem.id === 'bloque-mensaje-ml2') {
-                if (golpesBloque2 === 0) {
-                    golpesBloque2 = 1;
+                if (golpesBloque2 < 2) {
+                    animarImpactoBloque(elem);
+
+                    golpesBloque2++;
+                    sessionStorage.setItem('golpesBloque2', golpesBloque2);
                     activarBloque2();
-                } else if (golpesBloque2 === 1) {
-                    golpesBloque2 = 2;
-                    activarBloque2();
-                    elem.classList.add('usado');
+
+                    if (golpesBloque2 === 1) {
+                        elem.classList.add('agrietado');
+                    } else {
+                        elem.classList.remove('agrietado');
+                        elem.classList.add('usado');
+                    }
                 }
             }
         }
@@ -382,7 +355,6 @@ function resolverColisiones(siguienteX, siguienteY) {
 
     return resultado;
 }
-
 function entrarAlCastillo() {
     if (entrandoAlCastillo) {
         return;
