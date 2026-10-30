@@ -293,20 +293,39 @@ function resolverColisiones(siguienteX, siguienteY) {
             return;
         }
 
-       if (velocidadY > 0 && marioY + marioHeight <= bBottom + 25) {
+     if (
+    velocidadY > 0 &&
+    marioY + marioHeight <= bBottom + bHeight + 10
+) {
     resultado.y = bBottom - marioHeight;
     velocidadY = 0;
 
     if (elem.id === 'bloque-mensaje-ml') {
-        if (golpesBloque1 < 2) {
-            golpesBloque1++;
+        if (golpesBloque1 === 0) {
+            golpesBloque1 = 1;
+            sessionStorage.setItem('golpesBloque1', golpesBloque1);
             activarBloque1();
-
-            if (golpesBloque1 === 2) {
-                elem.classList.add('usado');
-            }
+        } else if (golpesBloque1 === 1) {
+            golpesBloque1 = 2;
+            sessionStorage.setItem('golpesBloque1', golpesBloque1);
+            activarBloque1();
+            elem.classList.add('usado');
         }
     }
+
+    if (elem.id === 'bloque-mensaje-ml2') {
+        if (golpesBloque2 === 0) {
+            golpesBloque2 = 1;
+            sessionStorage.setItem('golpesBloque2', golpesBloque2);
+            activarBloque2();
+        } else if (golpesBloque2 === 1) {
+            golpesBloque2 = 2;
+            sessionStorage.setItem('golpesBloque2', golpesBloque2);
+            activarBloque2();
+            elem.classList.add('usado');
+        }
+    }
+}
 
     if (elem.id === 'bloque-mensaje-ml2') {
         if (golpesBloque2 < 2) {
