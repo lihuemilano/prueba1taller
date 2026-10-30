@@ -8,8 +8,6 @@ const tituloInicial = document.getElementById('titulo-inicial');
 const ANCHO_MUNDO = 3000;
 const nivelSuelo = 50;
 
-
-
 let marioX;
 let marioY;
 
@@ -35,8 +33,6 @@ if (sessionStorage.getItem('iniciarEjemploDesdeComienzo') === 'true') {
         230;
 }
 
-
-
 let velocidadY = 0;
 let enElSuelo = false;
 let direccion = 1;
@@ -47,18 +43,19 @@ let golpesBloque1 =
 
 let golpesBloque2 =
     Number(sessionStorage.getItem('golpesBloque2')) || 0;
+
 let entrandoAlCastillo = false;
 
 const velocidadX = 7;
 const gravedad = 0.8;
 const fuerzaSalto = 17;
 
-// Variables de dirección exclusivas
+// Variables de dirección
 let moverIzquierda = false;
 let moverDerecha = false;
 let saltar = false;
 
-// Detección por nombre de tecla, código físico y código numérico (37, 38, 39)
+// Detección de teclas
 window.addEventListener('keydown', (e) => {
     const key = e.key;
     const code = e.code;
@@ -68,10 +65,12 @@ window.addEventListener('keydown', (e) => {
         moverIzquierda = true;
         e.preventDefault();
     }
+
     if (key === 'ArrowRight' || code === 'ArrowRight' || key === 'Right' || keyCode === 39) {
         moverDerecha = true;
         e.preventDefault();
     }
+
     if (key === 'ArrowUp' || code === 'ArrowUp' || key === 'Up' || keyCode === 38) {
         saltar = true;
         e.preventDefault();
@@ -86,9 +85,11 @@ window.addEventListener('keyup', (e) => {
     if (key === 'ArrowLeft' || code === 'ArrowLeft' || key === 'Left' || keyCode === 37) {
         moverIzquierda = false;
     }
+
     if (key === 'ArrowRight' || code === 'ArrowRight' || key === 'Right' || keyCode === 39) {
         moverDerecha = false;
     }
+
     if (key === 'ArrowUp' || code === 'ArrowUp' || key === 'Up' || keyCode === 38) {
         saltar = false;
     }
@@ -235,13 +236,12 @@ function restaurarCarteles() {
     }
 }
 
-// Animación genérica de impacto visual
+// Animación de impacto visual de los bloques
 function animarImpactoBloque(elem) {
     elem.classList.remove('golpeado');
     void elem.offsetWidth;
     elem.classList.add('golpeado');
 
-    // Salto físico del bloque en píxeles
     const bottomBase = parseInt(elem.style.bottom) || 190;
     elem.style.bottom = (bottomBase + 18) + 'px';
 
@@ -298,6 +298,17 @@ function resolverColisiones(siguienteX, siguienteY) {
             return;
         }
 
+        // Mario cae sobre un obstáculo
+        if (
+            velocidadY <= 0 &&
+            marioY >= bBottom + bHeight - 20
+        ) {
+            resultado.y = bBottom + bHeight;
+            velocidadY = 0;
+            resultado.enPlataforma = true;
+            return;
+        }
+
         // Mario golpea un bloque desde abajo
         if (
             velocidadY > 0 &&
@@ -344,6 +355,7 @@ function resolverColisiones(siguienteX, siguienteY) {
 
     return resultado;
 }
+
 function entrarAlCastillo() {
     if (entrandoAlCastillo) {
         return;
@@ -351,9 +363,9 @@ function entrarAlCastillo() {
 
     entrandoAlCastillo = true;
 
-    flechaIzquierda = false;
-    flechaDerecha = false;
-    flechaArriba = false;
+    moverIzquierda = false;
+    moverDerecha = false;
+    saltar = false;
 
     mario.className = '';
     mario.classList.add('mario-saludando');
@@ -363,8 +375,6 @@ function entrarAlCastillo() {
         mario.classList.add('entrando-castillo');
 
         setTimeout(() => {
-            sessionStorage.setItem('golpesBloque1', golpesBloque1);
-            sessionStorage.setItem('golpesBloque2', golpesBloque2);
             sessionStorage.setItem('golpesBloque1', golpesBloque1);
             sessionStorage.setItem('golpesBloque2', golpesBloque2);
             sessionStorage.setItem('marioX', 3250);
@@ -471,6 +481,8 @@ mario.style.bottom = marioY + 'px';
 
 mario.style.transform =
     'scaleX(1.2) scaleY(1.2)';
+
+restaurarCarteles();
 
 if (tituloInicial) {
     tituloInicial.classList.remove('oculto');
