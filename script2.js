@@ -2,7 +2,7 @@ const mario = document.getElementById('mario');
 const escenario = document.getElementById('escenario');
 const tuberiaJuego1 = document.getElementById('tuberia-juego1');
 const tuberiaJuego2 = document.getElementById('tuberia-juego2');
-let entrandoJuego = false;
+
 let entrandoJuego = false;
 
 let tuberiasJuegosActivas =
