@@ -235,6 +235,19 @@ function restaurarCarteles() {
     }
 }
 
+function animarImpactoBloque(elem) {
+    elem.classList.remove('golpeado');
+    void elem.offsetWidth;
+    elem.classList.add('golpeado');
+
+    const bottomBase = parseInt(elem.style.bottom) || 190;
+    elem.style.bottom = (bottomBase + 18) + 'px';
+
+    setTimeout(() => {
+        elem.style.bottom = bottomBase + 'px';
+    }, 120);
+}
+
 function resolverColisiones(siguienteX, siguienteY) {
     const obstaculos = document.querySelectorAll('.obstaculo');
 
@@ -283,6 +296,7 @@ function resolverColisiones(siguienteX, siguienteY) {
             return;
         }
 
+        // Colisión desde abajo: Mario cae sobre el obstáculo
         if (
             velocidadY <= 0 &&
             marioY >= bBottom + bHeight - 20
@@ -293,6 +307,7 @@ function resolverColisiones(siguienteX, siguienteY) {
             return;
         }
 
+        // Colisión desde arriba: Mario golpea el bloque
         if (
             velocidadY > 0 &&
             marioY + marioHeight <= bBottom + 20
@@ -300,25 +315,41 @@ function resolverColisiones(siguienteX, siguienteY) {
             resultado.y = bBottom - marioHeight;
             velocidadY = 0;
 
+            // BLOQUE INTERACTIVO 1
             if (elem.id === 'bloque-mensaje-ml') {
-                if (golpesBloque1 === 0) {
-                    golpesBloque1 = 1;
+                if (golpesBloque1 < 2) {
+                    animarImpactoBloque(elem);
+
+                    golpesBloque1++;
+                    sessionStorage.setItem('golpesBloque1', golpesBloque1);
+
                     activarBloque1();
-                } else if (golpesBloque1 === 1) {
-                    golpesBloque1 = 2;
-                    activarBloque1();
-                    elem.classList.add('usado');
+
+                    if (golpesBloque1 === 1) {
+                        elem.classList.add('agrietado');
+                    } else {
+                        elem.classList.remove('agrietado');
+                        elem.classList.add('usado');
+                    }
                 }
             }
 
+            // BLOQUE INTERACTIVO 2
             if (elem.id === 'bloque-mensaje-ml2') {
-                if (golpesBloque2 === 0) {
-                    golpesBloque2 = 1;
+                if (golpesBloque2 < 2) {
+                    animarImpactoBloque(elem);
+
+                    golpesBloque2++;
+                    sessionStorage.setItem('golpesBloque2', golpesBloque2);
+
                     activarBloque2();
-                } else if (golpesBloque2 === 1) {
-                    golpesBloque2 = 2;
-                    activarBloque2();
-                    elem.classList.add('usado');
+
+                    if (golpesBloque2 === 1) {
+                        elem.classList.add('agrietado');
+                    } else {
+                        elem.classList.remove('agrietado');
+                        elem.classList.add('usado');
+                    }
                 }
             }
         }
