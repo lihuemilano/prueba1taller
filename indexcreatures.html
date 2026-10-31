@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Machine Learning: Creatures</title>
+    <link rel="stylesheet" href="style3creatures.css">
+</head>
+
+<body id="juego-nivel2">
+
+    <div id="juego">
+        <div id="escenario">
+            <div id="mundo">
+
+                <!-- Título Inicial -->
+                <div id="titulo-inicial" class="oculto">
+                    <h2>machine learning: creatures</h2>
+                    <p style="font-family: 'Michroma', sans-serif; font-size: small;">Usa aprendizaje por refuerzo <br> mediante reducción de impulsos</p>
+                </div>
+
+                <div id="tubo-salida-fifa" class="cañeria-entrada"></div>
+
+                <!-- Bloque amarillo interactivo 1 -->
+                <div class="bloque obstaculo" style="left: 1000px; bottom: 190px; width: 50px; height: 50px;"></div>
+                <div class="bloque-amarillo obstaculo" style="left: 1050px; bottom: 190px; width: 50px; height: 50px;" id="bloque-mensaje-ml"></div>
+                <div class="bloque obstaculo" style="left: 1100px; bottom: 190px; width: 50px; height: 50px;"></div>
+
+                <!-- CARTEL 1 (Interacción con Bloque 1) -->
+                <div id="cartel-ml" class="oculto">
+
+                    <!-- Golpe 1 -->
+                    <div id="ml1-contenido1" class="contenido-cartel">
+                        <div class="texto-cartel">
+                            <h2>Creatures utiliza aprendizaje mediante una red neuronal artificial</h2>
+                        </div>
+                        <img src="img/creatures2.png" alt="Red Neuronal Creatures">
+                    </div>
+
+                    <!-- Golpe 2 -->
+                    <div id="ml1-contenido2" class="contenido-cartel oculto">
+                        <div class="texto-cartel">
+                            <h2>funciona con un sistema de aprendizaje por refuerzo</h2>
+                        </div>
+                        <img src="img/consecuencia.png" alt="Aprendizaje por Refuerzo">
+                    </div>
+
+                </div>
+
+                <!-- Bloque amarillo interactivo 2 -->
+                <div class="bloque obstaculo" style="left: 1600px; bottom: 190px; width: 50px; height: 50px;"></div>
+                <div class="bloque-amarillo obstaculo" style="left: 1650px; bottom: 190px; width: 50px; height: 50px;" id="bloque-mensaje-ml2"></div>
+                <div class="bloque obstaculo" style="left: 1700px; bottom: 190px; width: 50px; height: 50px;"></div>
+
+                <!-- CARTEL 2 (Interacción con Bloque 2) -->
+                <div id="cartel-ml2" class="oculto">
+
+                    <!-- Golpe 1 -->
+                    <div id="ml2-contenido1" class="contenido-cartel">
+                        <div class="texto-cartel">
+                            <h2>Hay un peso de corto plazo (STW) que responde rápidamente al refuerzo y un peso de largo plazo (LTW) que cambia más lentamente y funciona como una especie de promedio de las experiencias anteriores.</h2>
+                        </div>
+                        <img src="img/creatures.png" alt="Pesos STW y LTW">
+                    </div>
+
+                    <!-- Golpe 2 -->
+                    <div id="ml2-contenido2" class="contenido-cartel oculto">
+                        <div class="texto-cartel">
+                            <h2>el aprendizaje está orientado principalmente a aprender qué acciones realizar ante determinadas situaciones</h2>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Tubería de entrada -->
+                <div class="tuberia obstaculo" style="left: 150px; bottom: 50px; width: 90px; height: 180px;"></div>
+
+                <!-- Elementos finales del nivel -->
+                <div id="bandera"></div>
+                <div id="castillo"></div>
+
+                <!-- Mario -->
+                <div id="mario" class="mario-idle" style="left: 171px; bottom: 230px;"></div>
+
+            </div>
+
+            <!-- Piso -->
+            <div id="piso"></div>
+        </div>
+    </div>
+
+    <script src="script3creatures.js"></script>
+</body>
+
+</html>
