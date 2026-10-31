@@ -525,3 +525,7 @@ function mostrarModal(victoria) {
 function reiniciarNivel() {
     window.location.reload();
 }
+
+function salirAlMenu() {
+    window.location.href = 'index.html';
+}
